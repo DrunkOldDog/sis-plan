@@ -1,0 +1,16 @@
+.jumbotron {
+    background-image: url('https://image.freepik.com/foto-gratis/recepcion-hotel-borrosa_1203-1411.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.espacio{
+    margin-bottom: 50px;
+}
+body{
+    background-color: #f8f6f6;
+}
+#content{
+    margin:auto;
+    width: 80%;
+    background-color: white;
+}
