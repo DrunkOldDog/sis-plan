@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::resource('eventos', 'EventoController');
 Route::get('/', function () {
     return view('evento.create');
 });
