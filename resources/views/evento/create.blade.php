@@ -25,7 +25,7 @@
                                               <label for="Precio">Precio:</label>
                                               <input type="text" class="form-control" name="precio">
                                             </div>
-                                          </div>
+                                    </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-12">
@@ -34,13 +34,24 @@
                                     </div>
                                   </div>
 
-                                        <div class="row">
-                                                <div class="form-group col-md-4">
-                                                        <label for="Imagen">Imagen:</label>
-                                                  <input type="file" accept="image/*" name="filename">
-                                               </div>
-                                        </div>
-                                        
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                          <label for="Imagen">Imagen:</label>
+                                          <input type="file" accept="image/*" name="filename">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-row">
+                                  <div class="form-group col-md-12">
+                                    <label for="Nombre">Servicios Adicionales:</label>
+                                  </div>
+                                  @foreach($servicios as $servicio)
+                                  <div class="form-group col-md-4">
+                                     <label class="checkbox-inline"><input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}"></label>&nbsp;{{$servicio->nombre}}&nbsp;({{$servicio->precio}}Bs.)
+                                  </div>
+                                  @endforeach
+                                </div>
+
                                 <div class="row">
                                   <div class="col-md-4"></div>
                                   <div class="form-group col-md-4" style="margin-top:60px">

@@ -11,6 +11,3 @@
 |
 */
 Route::resource('eventos', 'EventoController');
-Route::get('/', function () {
-    return view('evento.create');
-});

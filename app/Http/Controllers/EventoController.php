@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EventoController extends Controller
 {
@@ -14,6 +15,7 @@ class EventoController extends Controller
     public function index()
     {
         //
+        
         $eventos=\App\Evento::paginate(10);
         $eventos = \App\Evento::orderBy('id_eventos')->get();
         return view('evento.index',compact('eventos'));
@@ -26,8 +28,13 @@ class EventoController extends Controller
      */
     public function create()
     {
-        //
-        return view('evento.create');
+        //obtener todos los servicios disponibles
+        $servicios = DB::table('servicios')
+                 ->select('*')
+                 ->orderBy('id_servicios')
+                 ->get();
+
+        return view('evento.create', compact('servicios'));
     }
 
     /**
@@ -52,6 +59,16 @@ class EventoController extends Controller
         $evento->foto = $name;
         $evento->save();
         
+        //recolectar info de los checkbox y almacenar en la tabla servicios_evento
+        $myCheckboxes = $request->input('servi');
+        foreach($myCheckboxes as $value){
+            DB::table('servicios_evento')->insert(
+                array(
+                    'id_servicios' => $value,
+                    'id_eventos' => $evento->id_eventos
+                )
+            );
+        }
         return redirect('eventos')->with('success', 'Information has been added');
     }
 

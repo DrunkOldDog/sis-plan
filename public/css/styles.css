@@ -14,3 +14,8 @@ body{
     width: 80%;
     background-color: white;
 }
+label{
+    font-weight: 600;
+    font-size: 16px;
+    color: #636161;
+}
