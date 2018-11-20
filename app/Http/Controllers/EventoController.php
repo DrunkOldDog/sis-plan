@@ -92,8 +92,25 @@ class EventoController extends Controller
     public function edit($id)
     {
         //
+        $servicios = DB::table('servicios')
+                 ->select('*')
+                 ->orderBy('id_servicios')
+                 ->get();
         $evento = \App\Evento::find($id);
-        return view('evento.edit',compact('evento','id'));
+
+        $precios = DB::table('servicios_evento')
+                        ->select('servicios.id_servicios')
+                        ->join('servicios', 'servicios.id_servicios', '=', 'servicios_evento.id_servicios')
+                        ->join('eventos', 'eventos.id_eventos', '=', 'servicios_evento.id_eventos')
+                        ->where('eventos.id_eventos', $id)
+                        ->orderBy('id_servicios_evento')
+                        ->get();
+                        $marcados = array();
+                        foreach($precios as $precio){
+                        array_push($marcados, $precio->id_servicios);
+                        }
+
+        return view('evento.edit',compact('evento','id','servicios','marcados'));
     }
 
     /**
@@ -111,6 +128,18 @@ class EventoController extends Controller
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
         $evento->save();
+        
+        //recolectar info de los checkbox y almacenar en la tabla servicios_evento
+        /*$myCheckboxes = $request->input('servi');
+        foreach($myCheckboxes as $value){
+            DB::table('servicios_evento')->insert(
+                array(
+                    'id_servicios' => $value,
+                    'id_eventos' => $evento->id_eventos
+                )
+            );
+        }*/
+
         return redirect('eventos');
     }
 

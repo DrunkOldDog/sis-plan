@@ -1,5 +1,6 @@
 @extends('layout.principal')
 @section('content')
+<div id="content">
     <div class="container-fluid mt--7">
         <div class="row">
             <div class="col-xl-12 order-xl-1">
@@ -34,13 +35,36 @@
                                     </div>
                                   </div>
 
-                                        <div class="row">
-                                                <div class="form-group col-md-4">
-                                                  <label for="Imagen">Imagen:</label>
-                                                  <input type="file" accept="image/*" name="filename">
-                                               </div>
+                                <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="Imagen">Imagen:</label>
+                                            <input type="file" accept="image/*" name="filename">
                                         </div>
-                                        
+                                </div>
+                                    <br>
+                                <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="Nombre">Servicios Adicionales:</label>
+                                        </div>
+                                        @foreach($servicios as $servicio)
+                                          <div class="form-group col-md-4">
+                                             <label class="checkbox-inline">
+                                                
+                                                @foreach($marcados as $marcado)
+                                                <?php $chozni = 0;?>
+                                                    @if($marcado == $servicio->id_servicios)
+                                                         <input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}" checked>
+                                                         <?php $chozni = 1;?>
+                                                         @break
+                                                    @endif
+                                                @endforeach
+                                                @if($chozni != 1) 
+                                                <input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}">
+                                                @endif
+                                            </label>&nbsp;{{$servicio->nombre}}&nbsp;({{$servicio->precio}}Bs.)
+                                          </div>
+                                        @endforeach
+                                </div>       
                                 <div class="row">
                                   <div class="col-md-4"></div>
                                   <div class="form-group col-md-4" style="margin-top:60px">
@@ -53,5 +77,6 @@
                 </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
