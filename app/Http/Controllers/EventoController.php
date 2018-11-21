@@ -130,7 +130,12 @@ class EventoController extends Controller
         $evento->save();
         
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
-        /*$myCheckboxes = $request->input('servi');
+        $myCheckboxes = $request->input('servi');
+
+        DB::table('servicios_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+
         foreach($myCheckboxes as $value){
             DB::table('servicios_evento')->insert(
                 array(
@@ -138,8 +143,8 @@ class EventoController extends Controller
                     'id_eventos' => $evento->id_eventos
                 )
             );
-        }*/
-
+        }
+        
         return redirect('eventos');
     }
 
