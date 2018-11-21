@@ -13,7 +13,7 @@
                     </div>
                     <hr>
                     <div class="card-body">
-                            <form method="post" action="{{action('EventoController@update', $id)}}">
+                            <form action="{{action('EventoController@update', $id)}}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <input name="_method" type="hidden" value="PATCH">
                                     <br>

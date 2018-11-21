@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class EventoController extends Controller
 {
@@ -122,7 +123,6 @@ class EventoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $evento= \App\Evento::find($id);
         $evento->nombre=$request->get('nombre');
         $evento->precio=$request->get('precio');
@@ -159,6 +159,9 @@ class EventoController extends Controller
         //
         $evento = \App\Evento::find($id);
         $evento->delete();
+        DB::table('servicios_evento')
+                ->where('id_eventos', $id)
+                ->delete();
         return redirect('eventos')->with('success','Information has been  deleted');
     }
 }
