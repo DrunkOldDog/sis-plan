@@ -19,8 +19,10 @@ class CreateReservasTable extends Migration
             $table->foreign('id_clientes')->references('id_clientes')->on('clientes')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('id_eventos');
             $table->foreign('id_eventos')->references('id_eventos')->on('eventos')->onDelete('cascade')->onUpdate('cascade');
-            $table->date('fec_reserva');
+            $table->datetime('fec_reserva');
             $table->date('fec_evento');
+            $table->time('hor_ini_evento');
+            $table->time('hor_fin_evento');
             $table->timestamps();
         });
     }

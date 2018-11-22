@@ -19,3 +19,11 @@ label{
     font-size: 16px;
     color: #636161;
 }
+img{
+    width: 150px;
+    height: 250px;
+}
+h5{
+    text-align: center;
+    margin-bottom: 0;
+}

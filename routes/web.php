@@ -11,7 +11,7 @@
 |
 */
 //home page
-Route::get('/', ['uses'=>'ReservaController@create']);       
+Route::get('/', ['uses'=>'HomeController@index']);       
 
 //vistas
 Route::resource('eventos', 'EventoController');
