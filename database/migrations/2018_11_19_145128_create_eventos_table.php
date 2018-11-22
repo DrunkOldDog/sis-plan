@@ -19,6 +19,7 @@ class CreateEventosTable extends Migration
             $table->foreign('id_ambientes')->references('id_ambientes')->on('ambientes')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nombre', 45);
             $table->float('precio');
+            $table->float('precio_total')->nullable();
             $table->string('descripcion', 200);
             $table->string('foto', 100);
             $table->timestamps();

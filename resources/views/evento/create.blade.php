@@ -46,7 +46,7 @@
                                     <label for="Ambientes">Ambientes:</label>
                                     <select name="id_ambientes" id="id_ambientes" class="form-control">
                                             @foreach($ambientes as $ambiente)
-                                            <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}</option>
+                                            <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>
                                             @endforeach
                                          </select>
                                   </div>

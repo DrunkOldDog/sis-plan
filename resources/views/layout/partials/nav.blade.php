@@ -9,7 +9,7 @@
               <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Paquetes</a>
+              <a class="nav-link" href="{{ url('eventos') }}">Paquetes</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Precios</a>

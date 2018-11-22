@@ -43,14 +43,14 @@
                                 </div>
                                     <br>
                                     <div class="row">
-                                        <div class="form-group col-md-12">
+                                        <div class="form-group col-md-6">
                                           <label for="Ambientes">Ambientes:</label>
                                           <select name="id_ambientes" id="id_ambientes" class="form-control">
                                                   @foreach($ambientes as $ambiente)
                                                   @if($ambiente->id_ambientes == $evento['id_ambientes'])
-                                                  <option value="{{$ambiente->id_ambientes}}" selected>{{ $ambiente->nombre }}</option>
+                                                  <option value="{{$ambiente->id_ambientes}}" selected>{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>
                                                   @else
-                                                  <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}</option>@endif
+                                                  <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>@endif
                                                   @endforeach
                                                </select>
                                         </div>

@@ -16,10 +16,13 @@ class EventoController extends Controller
     public function index()
     {
         //
-        
+        $ambientes = DB::table('ambientes')
+                 ->select('*')
+                 ->orderBy('id_ambientes')
+                 ->get(); 
         $eventos=\App\Evento::paginate(10);
         $eventos = \App\Evento::orderBy('id_eventos')->get();
-        return view('evento.index',compact('eventos'));
+        return view('evento.index',compact('eventos','ambientes'));
     }
 
     /**
@@ -59,6 +62,7 @@ class EventoController extends Controller
             $file->move(public_path().'/images/', $name);
          }
         $evento= new \App\Evento;
+        $evento->id_ambientes = $request->input('id_ambientes');
         $evento->nombre=$request->get('nombre');
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
@@ -135,6 +139,7 @@ class EventoController extends Controller
     public function update(Request $request, $id)
     {
         $evento= \App\Evento::find($id);
+        $evento->id_ambientes = $request->input('id_ambientes');
         $evento->nombre=$request->get('nombre');
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
