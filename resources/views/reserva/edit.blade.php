@@ -7,7 +7,7 @@
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">Edicion de Paquetes:</h3>
+                                <h3 class="mb-0">Registro de Parqueos:</h3>
                             </div>
                         </div>
                     </div>
@@ -42,19 +42,6 @@
                                         </div>
                                 </div>
                                     <br>
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
-                                          <label for="Ambientes">Ambientes:</label>
-                                          <select name="id_ambientes" id="id_ambientes" class="form-control">
-                                                  @foreach($ambientes as $ambiente)
-                                                  @if($ambiente->id_ambientes == $evento['id_ambientes'])
-                                                  <option value="{{$ambiente->id_ambientes}}" selected>{{ $ambiente->nombre }}</option>
-                                                  @else
-                                                  <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}</option>@endif
-                                                  @endforeach
-                                               </select>
-                                        </div>
-                                      </div>
                                 <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="Nombre">Servicios Adicionales:</label>

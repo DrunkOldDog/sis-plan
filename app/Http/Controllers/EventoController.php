@@ -34,8 +34,13 @@ class EventoController extends Controller
                  ->select('*')
                  ->orderBy('id_servicios')
                  ->get();
+        //obtener todos los ambientes disponibles
+        $ambientes = DB::table('ambientes')
+                 ->select('*')
+                 ->orderBy('id_ambientes')
+                 ->get();
 
-        return view('evento.create', compact('servicios'));
+        return view('evento.create', compact('servicios', 'ambientes'));
     }
 
     /**
@@ -97,6 +102,12 @@ class EventoController extends Controller
                  ->select('*')
                  ->orderBy('id_servicios')
                  ->get();
+        
+        $ambientes = DB::table('ambientes')
+                 ->select('*')
+                 ->orderBy('id_ambientes')
+                 ->get();
+        
         $evento = \App\Evento::find($id);
 
         $precios = DB::table('servicios_evento')
@@ -111,7 +122,7 @@ class EventoController extends Controller
                         array_push($marcados, $precio->id_servicios);
                         }
 
-        return view('evento.edit',compact('evento','id','servicios','marcados'));
+        return view('evento.edit',compact('evento','id','servicios','marcados','ambientes'));
     }
 
     /**
