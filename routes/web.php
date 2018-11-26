@@ -11,7 +11,7 @@
 |
 */
 //home page
-Route::get('/', ['uses'=>'HomeController@index']);       
+Route::get('/', ['uses'=>'HomecenterController@index']);       
 
 //vistas
 Route::resource('eventos', 'EventoController');
@@ -20,3 +20,7 @@ Route::get('/reservas/create/{id}',[
     'uses' => 'ReservaController@crear', 
     'as' => 'test.route'
 ]);
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
