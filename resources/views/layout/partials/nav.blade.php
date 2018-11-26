@@ -15,6 +15,9 @@
               <a class="nav-link" href="{{ url('eventos') }}">Paquetes</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{{ url('ambientes') }}">Ambientes</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#">Precios</a>
             </li>
           </ul>
