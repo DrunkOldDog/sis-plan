@@ -12,10 +12,10 @@
                         @csrf
 
                         <div class="form-group row {{ $errors->has('login') ? ' has-error' : '' }}">
-                            <label for="login" class="col-md-4 col-form-label text-md-right">E-Mail o Usuario</label>
+                            <label for="login" class="col-md-4 col-form-label text-md-right">Email o Usuario</label>
                            
                            <div class="col-md-6">
-                            <input id="login" type="login" class="form-control" name="login" value="{{ old('login') }}" required autofocus placeholder="Introduce tu E-Mail o Nombre de Usuario">
+                            <input id="login" type="login" class="form-control" name="login" value="{{ old('login') }}" required autofocus placeholder="Introduce tu email o username">
                            
                            @if ($errors->has('login'))
                             <span class="help-block">
@@ -26,10 +26,10 @@
                             </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Contraseña') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Introduce tu password">
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
@@ -45,7 +45,7 @@
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
+                                        {{ __('Recordarme en este equipo') }}
                                     </label>
                                 </div>
                             </div>
@@ -57,9 +57,9 @@
                                     {{ __('Login') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
+                                <!--a class="btn btn-link" href="{{ route('password.request') }}">
+                                    {{ __('Olvidaste tu contraseña?') }}
+                                </a-->
                             </div>
                         </div>
                     </form>
