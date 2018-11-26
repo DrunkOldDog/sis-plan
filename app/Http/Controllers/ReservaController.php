@@ -39,12 +39,13 @@ class ReservaController extends Controller
     public function create()
     {
         //
+        $id_crear = 1;
         $eventos = DB::table('eventos')
                  ->select('*')
                  ->orderBy('id_eventos')
                  ->get();
 
-        return view('reserva.create', compact('eventos'));
+        return view('reserva.create', compact('eventos', 'id_crear'));
     }
 
     /**
@@ -149,5 +150,20 @@ class ReservaController extends Controller
         $reserva = \App\Reserva::find($id);
         $reserva->delete();
         return redirect('reservas')->with('success','Information has been  deleted');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function crear($id_crear)
+    {
+        //
+        $eventos = DB::table('eventos')
+                 ->select('*')
+                 ->orderBy('id_eventos')
+                 ->get();
+        return view('reserva.create', compact('eventos','id_crear'));
     }
 }

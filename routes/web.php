@@ -16,3 +16,7 @@ Route::get('/', ['uses'=>'HomeController@index']);
 //vistas
 Route::resource('eventos', 'EventoController');
 Route::resource('reservas', 'ReservaController');
+Route::get('/reservas/create/{id}',[
+    'uses' => 'ReservaController@crear', 
+    'as' => 'test.route'
+]);

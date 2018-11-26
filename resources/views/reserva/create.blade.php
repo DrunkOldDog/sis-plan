@@ -50,10 +50,13 @@
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Evento:</label>
                                         <select name="id_eventos" id="id_eventos" class="form-control">
-                                            @foreach($eventos as $evento)
-                                            <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
-                                            @endforeach
-                                         </select>                                    
+                                                @foreach($eventos as $evento)
+                                                @if($evento->id_eventos == $id_crear)
+                                                <option value="{{$evento->id_eventos}}" selected>{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
+                                                @else
+                                                <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>@endif
+                                                @endforeach
+                                             </select>                                 
                                     </div>
                                  </div>
                             

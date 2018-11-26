@@ -17,7 +17,7 @@
                                 @foreach($eventos as $evento)
                                 <div class="col-md-4">
                                     <div class="thumbnail">
-                                        <a href="{{ action('ReservaController@create') }}">
+                                        <a href="{{ route('test.route', $evento->id_eventos) }}" method="GET">
                                         <img src="../../../images/{{$evento->foto}}" alt="Lights" style="width:100%">
                                         <h5 class="subtit">{{$evento->nombre}}</h5>
                                         <div class="caption">
