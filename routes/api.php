@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-Use App\Evento;
-use App\Http\Resources\EventoCollection;
 
 /*
 |--------------------------------------------------------------------------
