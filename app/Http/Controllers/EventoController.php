@@ -42,8 +42,18 @@ class EventoController extends Controller
                  ->select('*')
                  ->orderBy('id_ambientes')
                  ->get();
-
-        return view('evento.create', compact('servicios', 'ambientes'));
+        //obtener los servicios con servicios especificos
+        $serviciosespecificos = DB::table('servicios')
+                                ->select('servicios.id_servicios','servicios.nombre')
+                                ->join('servicios_especifico', 'servicios.id_servicios', '=', 'servicios_especifico.id_servicios')
+                                ->groupBy('servicios.id_servicios','servicios.nombre')
+                                ->get();
+        //obtener los servicios especificos
+        $complementos = DB::table('servicios_especifico')
+                                ->select('*')
+                                ->orderBy('id_servicios_especifico')
+                                ->get();
+        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'complementos'));
     }
 
     /**
@@ -79,6 +89,24 @@ class EventoController extends Controller
                 )
             );
         }
+
+        //recolectar info de los text inputs y almacenar en la tabla servicios_especifico
+        $myInputs = $request->input('espe');
+        $myInputses = $request->input('emex');
+        $myBolbi = $request->input('bolbi');
+        $myPrecio = $request->input('preciosa');
+        $aux = 0;
+        foreach($myInputses as $value){
+            //echo "update numero:" .$value. "con el valor de" .$myInputs[$aux]. "<br>";
+            DB::table('servicios_especifico')
+            ->where('id_servicios_especifico', $value)
+            ->update(['cantidad' => $myInputs[$aux]]);
+            /*DB::table('servicios')
+            ->where('id_servicios', $myBolbi[$aux])
+            ->update(['precio' => $myInputs[$aux]*$myPrecio[$aux]]);*/
+            $aux++;
+        }
+
         return redirect('eventos')->with('success', 'Information has been added');
     }
 
