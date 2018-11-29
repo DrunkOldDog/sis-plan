@@ -54,6 +54,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="ci" class="col-md-4 col-form-label text-md-right">{{ __('CI') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="ci" type="text" class="form-control{{ $errors->has('ci') ? ' is-invalid' : '' }}" name="ci" value="{{ old('ci') }}" required>
+
+                                @if ($errors->has('ci'))
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('ci') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Direccion Correo') }}</label>
 
                             <div class="col-md-6">

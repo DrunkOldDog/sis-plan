@@ -22,6 +22,9 @@ class CreateEventosTable extends Migration
             $table->float('precio_total')->nullable();
             $table->string('descripcion', 500);
             $table->string('foto', 100);
+            $table->date('fecha_inicio')->nullable();
+            $table->date('fecha_fin')->nullable();
+            $table->float('descuento')->nullable();
             $table->timestamps();
         });
     }

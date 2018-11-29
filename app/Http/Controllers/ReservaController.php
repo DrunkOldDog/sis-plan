@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon;
 
 class ReservaController extends Controller
@@ -39,13 +40,12 @@ class ReservaController extends Controller
     public function create()
     {
         //
-        $id_crear = 1;
         $eventos = DB::table('eventos')
                  ->select('*')
                  ->orderBy('id_eventos')
                  ->get();
 
-        return view('reserva.create', compact('eventos', 'id_crear'));
+        return view('reserva.create', compact('eventos'));
     }
 
     /**
@@ -164,6 +164,12 @@ class ReservaController extends Controller
                  ->select('*')
                  ->orderBy('id_eventos')
                  ->get();
-        return view('reserva.create', compact('eventos','id_crear'));
+        
+        $usuario = DB::table('users')
+                ->select('*')
+                ->where('id', Auth::id())
+                ->get();
+                
+        return view('reserva.create', compact('eventos','id_crear','usuario'));
     }
 }
