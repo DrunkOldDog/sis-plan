@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class AmbienteController extends Controller
+class RolController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +15,9 @@ class AmbienteController extends Controller
     public function index()
     {
         //
-        $ambientes=\App\Ambiente::paginate(10);
-        $ambientes = \App\Ambiente::orderBy('id_ambientes')->get();
-        return view('ambiente.index',compact('ambientes'));
-        
+        $users=\App\User::paginate(10);
+        $users = \App\User::orderBy('id')->get();
+        return view('rol.index',compact('users'));
     }
 
     /**
@@ -28,7 +28,6 @@ class AmbienteController extends Controller
     public function create()
     {
         //
-        return view('ambiente.create');
     }
 
     /**
@@ -40,13 +39,6 @@ class AmbienteController extends Controller
     public function store(Request $request)
     {
         //
-        $ambiente= new \App\Ambiente;
-        $ambiente->nombre=$request->get('nombre');
-        $ambiente->capacidad=$request->get('capacidad');
-        $ambiente->precio=$request->get('precio');
-        $ambiente->save();
-        
-        return redirect('ambientes')->with('success', 'Information has been added');
     }
 
     /**
@@ -58,7 +50,6 @@ class AmbienteController extends Controller
     public function show($id)
     {
         //
-        return \App\Ambiente::where('id_ambientes', $id)->get();
     }
 
     /**
@@ -70,8 +61,11 @@ class AmbienteController extends Controller
     public function edit($id)
     {
         //
-        $ambiente = \App\Ambiente::find($id);
-        return view('ambiente.edit',compact('ambiente','id'));
+        $user = \App\User::find($id);
+        DB::table('users')
+            ->where('id', $id)
+            ->update(['isAdmin' => 1]);
+        return $this->index();
     }
 
     /**
@@ -84,12 +78,6 @@ class AmbienteController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $ambiente= \App\Ambiente::find($id);
-        $ambiente->nombre=$request->get('nombre');
-        $ambiente->capacidad=$request->get('capacidad');
-        $ambiente->precio=$request->get('precio');
-        $ambiente->save();
-        return redirect('ambientes');
     }
 
     /**
@@ -101,8 +89,10 @@ class AmbienteController extends Controller
     public function destroy($id)
     {
         //
-        $ambiente = \App\Ambiente::find($id);
-        $ambiente->delete();
-        return redirect('ambientes')->with('success','Information has been  deleted');
+        $user = \App\User::find($id);
+        DB::table('users')
+            ->where('id', $id)
+            ->update(['isAdmin' => 0]);
+        return $this->index();
     }
 }

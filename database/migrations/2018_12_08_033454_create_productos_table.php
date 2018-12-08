@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServiciosEspecificoTable extends Migration
+class CreateProductosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateServiciosEspecificoTable extends Migration
      */
     public function up()
     {
-        Schema::create('servicios_especifico', function (Blueprint $table) {
-            $table->increments('id_servicios_especifico');
-            $table->unsignedInteger('id_servicios');
-            $table->foreign('id_servicios')->references('id_servicios')->on('servicios')->onDelete('cascade')->onUpdate('cascade');
+        Schema::create('productos', function (Blueprint $table) {
+            $table->increments('id_productos');
             $table->string('nombre', 45);
             $table->float('precio');
-            $table->integer('cantidad')->nullable();
+            $table->boolean('estado');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateServiciosEspecificoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('servicios_especifico');
+        Schema::dropIfExists('productos');
     }
 }

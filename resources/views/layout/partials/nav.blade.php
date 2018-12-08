@@ -11,15 +11,23 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('reservas') }}">Reservas</a>
               </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('eventos') }}">Paquetes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url('ambientes') }}">Ambientes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Precios</a>
-            </li>
+              @if(auth()->user()->isAdmin == 1)
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url('eventos') }}">Paquetes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Promociones</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url('ambientes') }}">Ambientes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Precios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Dashboard</a>
+              </li>
+              @endif
           </ul>
           <ul class="navbar-nav mr-sm-2">
               <li class="nav-item dropdown">
@@ -28,6 +36,9 @@
                   </a>
 
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                      <a class="dropdown-item" href="{{ url('roles') }}">
+                        Agregar Roles
+                      </a>
                       <a class="dropdown-item" href="{{ route('logout') }}"
                          onclick="event.preventDefault();
                                        document.getElementById('logout-form').submit();">

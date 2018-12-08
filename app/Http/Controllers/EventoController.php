@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 
 class EventoController extends Controller
 {
@@ -45,14 +47,16 @@ class EventoController extends Controller
         //obtener los servicios con servicios especificos
         $serviciosespecificos = DB::table('servicios')
                                 ->select('servicios.id_servicios','servicios.nombre')
-                                ->join('servicios_especifico', 'servicios.id_servicios', '=', 'servicios_especifico.id_servicios')
+                                ->join('productos_servicio', 'servicios.id_servicios', '=', 'productos_servicio.id_servicios')
                                 ->groupBy('servicios.id_servicios','servicios.nombre')
                                 ->get();
-        //obtener los servicios especificos
-        $complementos = DB::table('servicios_especifico')
-                                ->select('*')
-                                ->orderBy('id_servicios_especifico')
-                                ->get();
+
+        /*//API GET 
+        $client = new \GuzzleHttp\Client();
+        $res = $client->get('https://api.github.com/user', ['auth' =>  ['user', 'pass']]);
+        echo $res->getStatusCode(); // 200
+        echo $res->getBody();*/
+
         return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'complementos'));
     }
 
@@ -77,10 +81,10 @@ class EventoController extends Controller
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
         $evento->foto = $name;
-        $evento->save();
+        //$evento->save();
         
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
-        $myCheckboxes = $request->input('servi');
+        /*$myCheckboxes = $request->input('servi');
         foreach($myCheckboxes as $value){
             DB::table('servicios_evento')->insert(
                 array(
@@ -88,26 +92,35 @@ class EventoController extends Controller
                     'id_eventos' => $evento->id_eventos
                 )
             );
-        }
+        }*/
 
         //recolectar info de los text inputs y almacenar en la tabla servicios_especifico
         $myInputs = $request->input('espe');
-        $myInputses = $request->input('emex');
-        $myBolbi = $request->input('bolbi');
-        $myPrecio = $request->input('preciosa');
         $aux = 0;
-        foreach($myInputses as $value){
-            //echo "update numero:" .$value. "con el valor de" .$myInputs[$aux]. "<br>";
-            DB::table('servicios_especifico')
-            ->where('id_servicios_especifico', $value)
-            ->update(['cantidad' => $myInputs[$aux]]);
-            /*DB::table('servicios')
-            ->where('id_servicios', $myBolbi[$aux])
-            ->update(['precio' => $myInputs[$aux]*$myPrecio[$aux]]);*/
-            $aux++;
+        $serviciosespecificos = DB::table('servicios')
+                                ->select('servicios.id_servicios','servicios.nombre')
+                                ->join('productos_servicio', 'servicios.id_servicios', '=', 'productos_servicio.id_servicios')
+                                ->groupBy('servicios.id_servicios','servicios.nombre')
+                                ->get();
+        foreach($serviciosespecificos as $seresp){
+            $complementos = DB::table('productos')
+                            ->select('*')
+                            ->join('productos_servicio', 'productos.id_productos', '=', 'productos_servicio.id_productos')
+                            ->where('productos_servicio.id_servicios', $seresp->id_servicios)
+                            ->where('productos.estado', true)
+                            ->orderBy('productos.id_productos')
+                            ->get();
+            foreach($complementos as $combi){
+                DB::table('productos_servicio')
+                    ->where('id_productos', $combi->id_productos)
+                    ->where('id_servicios', $seresp->id_servicios)
+                    ->update(['cantidad'], $myInputs[$aux]);
+                $aux++;
+            }
         }
+        
 
-        return redirect('eventos')->with('success', 'Information has been added');
+        //return redirect('eventos')->with('success', 'Information has been added');
     }
 
     /**

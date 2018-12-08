@@ -15,6 +15,7 @@ class ServiciosTableSeeder extends Seeder
         DB::table('servicios')->insert([
           [
             'nombre' => 'Alimentos y Bebidas',
+            'precio' => 0
           ],
           [
             'nombre' => 'Anfitrion',
@@ -26,6 +27,7 @@ class ServiciosTableSeeder extends Seeder
           ],
           [
             'nombre' => 'Bebidas Alcoholicas',
+            'precio' => 0
           ],
           [
             'nombre' => 'Musica y Parlantes',

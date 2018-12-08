@@ -61,16 +61,29 @@
                                     <h6>{{$seresp->nombre}}</h6>
                                     <hr>
                                   </div>
+                                  <?php
+                                    //obtener los productos
+                                    $complementos = DB::table('productos')
+                                                  ->select('*')
+                                                  ->join('productos_servicio', 'productos.id_productos', '=', 'productos_servicio.id_productos')
+                                                  ->where('productos_servicio.id_servicios', $seresp->id_servicios)
+                                                  ->where('productos.estado', true)
+                                                  ->orderBy('productos.id_productos')
+                                                  ->get();
+                                  ?>
                                     @foreach($complementos as $complemento)
-                                      @if($seresp->id_servicios == $complemento->id_servicios)
+                                    <?php
+                                      $cantidades = DB::table('productos_servicio')
+                                                    ->select('*')
+                                                    ->where('id_productos', $complemento->id_productos)
+                                                    ->where('id_servicios', $seresp->id_servicios)
+                                                    ->orderBy('id_productos_servicio')
+                                                    ->get();
+                                    ?>
                                       <label for="complemento" id="comple" class="col-sm-2 col-form-label">{{$complemento->nombre}}&nbsp;({{$complemento->precio}}Bs.):</label>
                                       <div class="form-group col-md-1">
-                                          <input type="text"  hidden="true" name="bolbi[]" value="{{$complemento->id_servicios}}">
-                                          <input type="text"  hidden="true" name="preciosa[]" value="{{$complemento->precio}}">
-                                          <input type="text"  hidden="true" name="emex[]" value="{{$complemento->id_servicios_especifico}}">
                                           <input type="number" class="form-control" name="espe[]" value="0">
                                       </div>
-                                      @endif
                                     @endforeach
                                     <br><br><br>
                                   @endforeach
