@@ -16,27 +16,22 @@ class ProductosServiciosTableSeeder extends Seeder
             [
               'id_servicios' => 1,
               'id_productos' => 1,
-              'cantidad' => 30
             ],
             [
                 'id_servicios' => 1,
               'id_productos' => 2,
-              'cantidad' => 50
             ],
             [
                 'id_servicios' => 4,
               'id_productos' => 3,
-              'cantidad' => 50
             ],
             [
                 'id_servicios' => 1,
               'id_productos' => 4,
-              'cantidad' => 40
             ],
             [
                 'id_servicios' => 4,
               'id_productos' => 5,
-              'cantidad' => 70
             ]
           ]);
     }

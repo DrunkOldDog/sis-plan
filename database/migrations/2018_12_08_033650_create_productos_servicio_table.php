@@ -19,7 +19,6 @@ class CreateProductosServicioTable extends Migration
             $table->foreign('id_servicios')->references('id_servicios')->on('servicios')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('id_productos');
             $table->foreign('id_productos')->references('id_productos')->on('productos')->onDelete('cascade')->onUpdate('cascade');
-            $table->integer('cantidad')->nullable();
             $table->timestamps();
         });
     }

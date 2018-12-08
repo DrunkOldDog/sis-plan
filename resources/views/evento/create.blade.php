@@ -4,6 +4,23 @@
 <div class="container-fluid mt--7">
         <div class="row">
             <div class="col-xl-12 order-xl-1">
+              <!-- ver los errores del programa-->
+                @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> Revise los campos obligatorios.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                @if(Session::has('success'))
+                <div class="alert alert-info">
+                    {{Session::get('success')}}
+                </div>
+                @endif
+
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
@@ -19,25 +36,25 @@
                                     <div class="form-row">
                                             <div class="form-group col-md-6">
                                               <label for="Nombre">Nombre:</label>
-                                              <input type="text" class="form-control" name="nombre">
+                                              <input type="text" class="form-control" value="{{old('nombre')}}" name="nombre">
                                             </div>
                                             <div class="form-group col-md-6">
                                               <label for="Precio">Precio:</label>
-                                              <input type="text" class="form-control" name="precio">
+                                              <input type="text" class="form-control" value="{{old('precio')}}" name="precio">
                                             </div>
                                     </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                       <label for="Descripcion">Descripcion:</label>
-                                      <textarea class="form-control" rows="3" name="descripcion"></textarea>
+                                      <textarea class="form-control" rows="3" name="descripcion">{{old('descripcion')}}</textarea>
                                     </div>
                                   </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                           <label for="Imagen">Imagen:</label>
-                                          <input type="file" accept="image/*" name="filename">
+                                          <input type="file" accept="image/*" name="imagen">
                                     </div>
                                 </div>
                                 <br>
@@ -57,35 +74,35 @@
                                   </div>
                                   
                                   @foreach($serviciosespecificos as $seresp)
-                                  <div class="form-group col-md-12">
-                                    <h6>{{$seresp->nombre}}</h6>
-                                    <hr>
-                                  </div>
-                                  <?php
-                                    //obtener los productos
-                                    $complementos = DB::table('productos')
-                                                  ->select('*')
-                                                  ->join('productos_servicio', 'productos.id_productos', '=', 'productos_servicio.id_productos')
-                                                  ->where('productos_servicio.id_servicios', $seresp->id_servicios)
-                                                  ->where('productos.estado', true)
-                                                  ->orderBy('productos.id_productos')
-                                                  ->get();
-                                  ?>
-                                    @foreach($complementos as $complemento)
+                                    <div class="form-group col-md-12">
+                                      <h6>{{$seresp->nombre}}</h6>
+                                      <hr>
+                                    </div>
                                     <?php
-                                      $cantidades = DB::table('productos_servicio')
+                                      //obtener los productos
+                                      $complementos = DB::table('productos')
                                                     ->select('*')
-                                                    ->where('id_productos', $complemento->id_productos)
-                                                    ->where('id_servicios', $seresp->id_servicios)
-                                                    ->orderBy('id_productos_servicio')
+                                                    ->join('productos_servicio', 'productos.id_productos', '=', 'productos_servicio.id_productos')
+                                                    ->where('productos_servicio.id_servicios', $seresp->id_servicios)
+                                                    ->where('productos.estado', true)
+                                                    ->orderBy('productos.id_productos')
                                                     ->get();
                                     ?>
-                                      <label for="complemento" id="comple" class="col-sm-2 col-form-label">{{$complemento->nombre}}&nbsp;({{$complemento->precio}}Bs.):</label>
-                                      <div class="form-group col-md-1">
-                                          <input type="number" class="form-control" name="espe[]" value="0">
-                                      </div>
-                                    @endforeach
-                                    <br><br><br>
+                                      @foreach($complementos as $complemento)
+                                      <?php
+                                        $cantidades = DB::table('productos_servicio')
+                                                      ->select('*')
+                                                      ->where('id_productos', $complemento->id_productos)
+                                                      ->where('id_servicios', $seresp->id_servicios)
+                                                      ->orderBy('id_productos_servicio')
+                                                      ->get();
+                                      ?>
+                                        <label for="complemento" id="comple" class="col-sm-2 col-form-label">{{$complemento->nombre}}&nbsp;({{$complemento->precio}}Bs.):</label>
+                                        <div class="form-group col-md-1">
+                                            <input type="number" class="form-control" name="espe[]" min="0" value="0">
+                                        </div>
+                                      @endforeach
+                                      <br><br><br>
                                   @endforeach
                                   
                                   <div class="form-group col-md-12"></div>
@@ -93,7 +110,7 @@
                                   @foreach($servicios as $servicio)
                                   @if($servicio->id_servicios != $serviciosespecificos[$chozni]->id_servicios)
                                   <div class="form-group col-md-4">
-                                     <label class="checkbox-inline"><input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}"></label>&nbsp;{{$servicio->nombre}}&nbsp;({{$servicio->precio}}Bs.)
+                                     <label class="checkbox-inline"><input type="checkbox" name="servicios[]" value="{{$servicio->id_servicios}}"></label>&nbsp;{{$servicio->nombre}}&nbsp;({{$servicio->precio}}Bs.)
                                   </div>
                                   @else 
                                     <?php 

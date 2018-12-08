@@ -68,10 +68,16 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        if($request->hasfile('filename'))
+        $request->validate([
+            'nombre' => 'required|alpha|max:20',
+            'precio' => 'required|numeric|min:0',
+            'descripcion' => 'required',
+            'imagen' => 'required|image|max:5000'
+        ]);
+
+        if($request->hasfile('imagen'))
          {
-            $file = $request->file('filename');
+            $file = $request->file('imagen');
             $name=time().$file->getClientOriginalName();
             $file->move(public_path().'/images/', $name);
          }
@@ -81,22 +87,26 @@ class EventoController extends Controller
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
         $evento->foto = $name;
-        //$evento->save();
+        $evento->save();
         
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
-        /*$myCheckboxes = $request->input('servi');
-        foreach($myCheckboxes as $value){
-            DB::table('servicios_evento')->insert(
-                array(
-                    'id_servicios' => $value,
-                    'id_eventos' => $evento->id_eventos
-                )
-            );
-        }*/
+        if($request->input('servicios')){
+            $myCheckboxes = $request->input('servicios');
+            foreach($myCheckboxes as $value){
+                DB::table('servicios_evento')->insert(
+                    array(
+                        'id_servicios' => $value,
+                        'id_eventos' => $evento->id_eventos
+                    )
+                );
+            }
+        }
 
         //recolectar info de los text inputs y almacenar en la tabla servicios_especifico
         $myInputs = $request->input('espe');
         $aux = 0;
+
+        //procedimiento para poder almacenar la cantidad de los productos de acuerdo al evento
         $serviciosespecificos = DB::table('servicios')
                                 ->select('servicios.id_servicios','servicios.nombre')
                                 ->join('productos_servicio', 'servicios.id_servicios', '=', 'productos_servicio.id_servicios')
@@ -110,17 +120,28 @@ class EventoController extends Controller
                             ->where('productos.estado', true)
                             ->orderBy('productos.id_productos')
                             ->get();
+            //echo "espaciado <br>";
             foreach($complementos as $combi){
-                DB::table('productos_servicio')
-                    ->where('id_productos', $combi->id_productos)
-                    ->where('id_servicios', $seresp->id_servicios)
-                    ->update(['cantidad'], $myInputs[$aux]);
+                //echo $combi->nombre;
+                $getId = DB::table('productos_servicio')
+                        ->select('*')
+                        ->where('id_servicios', $seresp->id_servicios)
+                        ->where('id_productos', $combi->id_productos)
+                        ->get();
+                //echo 'id ' . $getId[0]->id_productos_servicio . "<br>";
+                //echo 'inputs ' . $myInputs[$aux] . "<br>";
+                DB::table('productos_evento')->insert(
+                    array(
+                        'id_eventos' => $evento->id_eventos,
+                        'id_productos_servicio' => $getId[0]->id_productos_servicio,
+                        'cantidad' => $myInputs[$aux]
+                    )
+                );
                 $aux++;
             }
         }
         
-
-        //return redirect('eventos')->with('success', 'Information has been added');
+        return redirect('eventos')->with('success', 'Information has been added');
     }
 
     /**
