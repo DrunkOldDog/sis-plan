@@ -11,7 +11,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('reservas') }}">Reservas</a>
               </li>
-              @if(auth()->user()->isAdmin == 1)
+              @if(auth()->user()->isAdmin != 0)
               <li class="nav-item">
                 <a class="nav-link" href="{{ url('eventos') }}">Paquetes</a>
               </li>
@@ -24,9 +24,11 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">Precios</a>
               </li>
+              @endif
+              @if(auth()->user()->isAdmin == 1)
               <li class="nav-item">
-                <a class="nav-link" href="#">Dashboard</a>
-              </li>
+                  <a class="nav-link" href="#">Dashboard</a>
+                </li>
               @endif
           </ul>
           <ul class="navbar-nav mr-sm-2">

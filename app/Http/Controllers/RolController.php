@@ -64,7 +64,7 @@ class RolController extends Controller
         $user = \App\User::find($id);
         DB::table('users')
             ->where('id', $id)
-            ->update(['isAdmin' => 1]);
+            ->update(['isAdmin' => 2]);
         return $this->index();
     }
 

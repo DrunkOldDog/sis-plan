@@ -59,23 +59,70 @@
                                         <div class="form-group col-md-12">
                                             <label for="Nombre">Servicios Adicionales:</label>
                                         </div>
+
+                                        @foreach($serviciosespecificos as $seresp)
+                                    <div class="form-group col-md-12">
+                                      <h6>{{$seresp->nombre}}</h6>
+                                      <hr>
+                                    </div>
+                                    <?php
+                                      //obtener los productos
+                                      $complementos = DB::table('productos')
+                                                    ->select('*')
+                                                    ->join('productos_servicio', 'productos.id_productos', '=', 'productos_servicio.id_productos')
+                                                    ->where('productos_servicio.id_servicios', $seresp->id_servicios)
+                                                    ->where('productos.estado', true)
+                                                    ->orderBy('productos.id_productos')
+                                                    ->get();
+                                    ?>
+                                      @foreach($complementos as $complemento)
+                                      <?php
+                                        $cantidades = DB::table('productos_servicio')
+                                                      ->select('*')
+                                                      ->where('id_productos', $complemento->id_productos)
+                                                      ->where('id_servicios', $seresp->id_servicios)
+                                                      ->orderBy('id_productos_servicio')
+                                                      ->get();
+                                        
+                                        $cantidadProducto = DB::table('productos_evento')
+                                                        ->select('*')
+                                                        ->where('id_eventos', $evento['id_eventos'])
+                                                        ->where('id_productos_servicio', $cantidades[0]->id_productos_servicio)
+                                                        ->get();
+                                      ?>
+                                        <label for="complemento" id="comple" class="col-sm-2 col-form-label">{{$complemento->nombre}}&nbsp;({{$complemento->precio}}Bs.):</label>
+                                        <div class="form-group col-md-1">
+                                            <input type="number" class="form-control" name="espe[]" min="0" value="{{$cantidadProducto[0]->cantidad}}">
+                                        </div>
+                                      @endforeach
+                                      <br><br><br>
+                                  @endforeach
+                                  <div class="form-group col-md-12"></div>
+                                  <?php $chozni = 0; $choznita = 0?>
                                         @foreach($servicios as $servicio)
+                                        @if($servicio->id_servicios != $serviciosespecificos[$chozni]->id_servicios)
                                           <div class="form-group col-md-4">
                                              <label class="checkbox-inline">
-                                                
                                                 @foreach($marcados as $marcado)
-                                                <?php $chozni = 0;?>
+                                                <?php $choznita = 0;?>
                                                     @if($marcado == $servicio->id_servicios)
                                                          <input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}" checked>
-                                                         <?php $chozni = 1;?>
+                                                         <?php $choznita = 1;?>
                                                          @break
                                                     @endif
                                                 @endforeach
-                                                @if($chozni != 1) 
+                                                @if($choznita != 1) 
                                                 <input type="checkbox" name="servi[]" value="{{$servicio->id_servicios}}">
                                                 @endif
                                             </label>&nbsp;{{$servicio->nombre}}&nbsp;({{$servicio->precio}}Bs.)
                                           </div>
+                                          @else 
+                                            <?php 
+                                                if(count($serviciosespecificos)-1>$chozni){
+                                                $chozni += 1;
+                                                }
+                                            ?>
+                                          @endif
                                         @endforeach
                                 </div>       
                                 <div class="row">
