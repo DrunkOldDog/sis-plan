@@ -62,9 +62,8 @@ class RolController extends Controller
     {
         //
         $user = \App\User::find($id);
-        DB::table('users')
-            ->where('id', $id)
-            ->update(['isAdmin' => 2]);
+        $user->isAdmin = 2;
+        $user->save();
         return $this->index();
     }
 
@@ -90,9 +89,11 @@ class RolController extends Controller
     {
         //
         $user = \App\User::find($id);
-        DB::table('users')
+        $user->isAdmin = 0;
+        $user->save();
+        /*DB::table('users')
             ->where('id', $id)
-            ->update(['isAdmin' => 0]);
+            ->update(['isAdmin' => 0]);*/
         return $this->index();
     }
 }

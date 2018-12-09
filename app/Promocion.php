@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Promocion extends Model
 {
+    protected $table = 'eventos';
+    
     protected $primaryKey = 'id_eventos';
 
     protected $fillable=[

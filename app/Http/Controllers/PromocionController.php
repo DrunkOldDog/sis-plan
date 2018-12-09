@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Promocion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -19,8 +20,8 @@ class PromocionController extends Controller
                 ->select('*')
                 ->orderBy('id_ambientes')
                 ->get(); 
-       $eventos=\App\Evento::paginate(10);
-       $eventos = \App\Evento::whereNotNull('fecha_inicio')->orderBy('id_eventos')->get();
+       $eventos=\App\Promocion::paginate(10);
+       $eventos = \App\Promocion::whereNotNull('fecha_inicio')->orderBy('id_eventos')->get();
        return view('promocion.index',compact('eventos','ambientes'));
     }
 
@@ -167,7 +168,7 @@ class PromocionController extends Controller
         $price->precio_total = $total+$sum+$replik+$evento->precio - ($total+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
         
-        //return redirect('promociones')->with('success', 'Information has been added');
+        return redirect('promociones')->with('success', 'Information has been added');
     }
 
     /**
@@ -213,5 +214,14 @@ class PromocionController extends Controller
     public function destroy($id)
     {
         //
+        $promocion = \App\Promocion::find($id);
+        $promocion->delete();
+        DB::table('servicios_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+        DB::table('productos_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+        return redirect('promociones')->with('success','Information has been  deleted');
     }
 }
