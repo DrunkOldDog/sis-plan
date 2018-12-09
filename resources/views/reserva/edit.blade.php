@@ -4,6 +4,22 @@
     <div class="container-fluid mt--7">
         <div class="row">
             <div class="col-xl-12 order-xl-1">
+                <!-- ver los errores del programa-->
+                @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> Revise los campos obligatorios.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                @if(Session::has('success'))
+                <div class="alert alert-info">
+                    {{Session::get('success')}}
+                </div>
+                @endif
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
