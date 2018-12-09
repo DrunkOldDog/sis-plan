@@ -40,6 +40,11 @@ class AmbienteController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'capacidad' => 'required|numeric|between:0, 1000',
+            'precio' => 'required|numeric|between:0, 10000'
+        ]);
         $ambiente= new \App\Ambiente;
         $ambiente->nombre=$request->get('nombre');
         $ambiente->capacidad=$request->get('capacidad');

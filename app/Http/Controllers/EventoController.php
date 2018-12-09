@@ -23,7 +23,7 @@ class EventoController extends Controller
                  ->orderBy('id_ambientes')
                  ->get(); 
         $eventos=\App\Evento::paginate(10);
-        $eventos = \App\Evento::orderBy('id_eventos')->get();
+        $eventos = \App\Evento::whereNull('fecha_inicio')->orderBy('id_eventos')->get();
         return view('evento.index',compact('eventos','ambientes'));
     }
 

@@ -57,6 +57,12 @@ class ReservaController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'apellido' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'ci' => 'required|alpha_num|max:10',
+        ]);
+
         DB::table('clientes')->insert(
             array(
                 'nombre' => $request->get('nombre'),
@@ -83,7 +89,7 @@ class ReservaController extends Controller
         $reserva->hor_fin_evento=$request->get('hor_fin_evento');
         $reserva->save();
         
-        return redirect('reservas')->with('success', 'Information has been added');
+        return redirect('reservas')->with('success', 'Se almaceno la informacion correctamente.');
     }
 
     /**
@@ -135,7 +141,7 @@ class ReservaController extends Controller
         $reserva->hor_ini_evento=$request->get('hor_ini_evento');
         $reserva->hor_fin_evento=$request->get('hor_fin_evento');
         $reserva->save();
-        return redirect('reservas');
+        return redirect('reservas')->with('success', 'Se edito la informacion correctamente.');
     }
 
     /**
@@ -149,7 +155,7 @@ class ReservaController extends Controller
         //
         $reserva = \App\Reserva::find($id);
         $reserva->delete();
-        return redirect('reservas')->with('success','Information has been  deleted');
+        return redirect('reservas')->with('success','Se elimino correctamente.');
     }
 
     /**
