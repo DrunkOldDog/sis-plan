@@ -35,12 +35,14 @@
                                     </div>
                                   </div>
 
-                                <div class="row">
-                                        <div class="form-group col-md-4">
-                                            <label for="Imagen">Imagen:</label>
-                                            <input type="file" accept="image/*" name="filename">
+                                  <label for="Imagen">Imagen:</label>
+                                  <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <img class="imagensilla" width="500" height="400" src="../../../images/{{$evento->foto}}">
+                                            <input type="file" accept="image/*" name="imagen">
                                         </div>
-                                </div>
+                                    </div>
+
                                     <br>
                                     <div class="row">
                                         <div class="form-group col-md-6">
