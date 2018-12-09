@@ -24,7 +24,7 @@ class CreateEventosTable extends Migration
             $table->string('foto', 100);
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
-            $table->float('descuento')->nullable();
+            $table->decimal('descuento', 2, 2)->nullable();
             $table->timestamps();
         });
     }

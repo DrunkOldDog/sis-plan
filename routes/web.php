@@ -15,6 +15,7 @@ Route::get('/', ['uses'=>'HomecenterController@index'])->middleware('auth');
 
 //vistas
 Route::resource('eventos', 'EventoController')->middleware('admin', 'encargado');
+Route::resource('promociones', 'PromocionController')->middleware('admin', 'encargado');
 Route::resource('reservas', 'ReservaController')->middleware('auth');
 Route::resource('ambientes', 'AmbienteController')->middleware('admin', 'encargado');
 Route::resource('roles', 'RolController')->middleware('admin');
