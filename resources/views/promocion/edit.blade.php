@@ -4,6 +4,22 @@
     <div class="container-fluid mt--7">
         <div class="row">
             <div class="col-xl-12 order-xl-1">
+                <!-- ver los errores del programa-->
+                @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Error!</strong> Revise los campos obligatorios.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+                @if(Session::has('success'))
+                <div class="alert alert-info">
+                    {{Session::get('success')}}
+                </div>
+                @endif
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
@@ -57,6 +73,23 @@
                                                </select>
                                         </div>
                                       </div>
+
+                                      <?php date_default_timezone_set('America/La_Paz');?>
+                                      <div class="form-row">
+                                          <div class="form-group col-md-4">
+                                            <label for="Fecha_Inicio">Fecha Inicio:</label>
+                                            <input type="date" @if(old('fecha_inicio')) value="{{old('fecha_inicio')}}" @else value="{{$evento->fecha_inicio}}" @endif min="{{date("Y-m-d")}}" class="form-control" name="fecha_inicio" required>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                            <label for="Fecha_Fin">Fecha Fin:</label>
+                                            <input type="date" @if(old('fecha_fin')) value="{{old('fecha_fin')}}" @else value="{{$evento->fecha_fin}}" @endif min="{{date("Y-m-d")}}" class="form-control" name="fecha_fin" required>
+                                          </div>
+                                          <div class="form-group col-md-4">
+                                              <label for="Descuento">Descuento:</label>
+                                              <input type="text" class="form-control" value="{{$evento->descuento}}" name="descuento">
+                                            </div>
+                                      </div>
+
                                 <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="Nombre">Servicios Adicionales:</label>

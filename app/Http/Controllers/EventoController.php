@@ -169,7 +169,7 @@ class EventoController extends Controller
         $price->precio_total = $total+$sum+$replik+$evento->precio;
         $price->save();
         
-        return redirect('eventos')->with('success', 'Information has been added');
+        return redirect('eventos')->with('success', 'La informacion se almaceno correctamente.');
     }
 
     /**
@@ -338,7 +338,7 @@ class EventoController extends Controller
         $price->precio_total = $total+$sum+$replik+$evento->precio;
         $price->save();
 
-        return redirect('eventos');
+        return redirect('eventos')->with('success', 'La informacion se edito correctamente.');
     }
 
     /**
@@ -355,6 +355,6 @@ class EventoController extends Controller
         DB::table('servicios_evento')
                 ->where('id_eventos', $id)
                 ->delete();
-        return redirect('eventos')->with('success','Information has been  deleted');
+        return redirect('eventos')->with('success','Se elimino correctamente.');
     }
 }

@@ -46,7 +46,7 @@ class AmbienteController extends Controller
         $ambiente->precio=$request->get('precio');
         $ambiente->save();
         
-        return redirect('ambientes')->with('success', 'Information has been added');
+        return redirect('ambientes')->with('success', 'La informacion se almaceno correctamente.');
     }
 
     /**
@@ -89,7 +89,7 @@ class AmbienteController extends Controller
         $ambiente->capacidad=$request->get('capacidad');
         $ambiente->precio=$request->get('precio');
         $ambiente->save();
-        return redirect('ambientes');
+        return redirect('ambientes')->with('success', 'La informacion se edito correctamente.');;
     }
 
     /**
@@ -103,6 +103,6 @@ class AmbienteController extends Controller
         //
         $ambiente = \App\Ambiente::find($id);
         $ambiente->delete();
-        return redirect('ambientes')->with('success','Information has been  deleted');
+        return redirect('ambientes')->with('success','Se elimino correctamente.');
     }
 }
