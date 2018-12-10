@@ -38,36 +38,37 @@
                                     <div class="form-row">
                                             <div class="form-group col-md-4">
                                               <label for="Nombre">Nombre:</label>
-                                            <input type="text" class="form-control" name="nombre" @if(isset($id_crear)) value="{{$usuario[0]->name}}" @else value="" @endif>
+                                            <input type="text" class="form-control" name="nombre" @if(isset($id_crear)) value="{{$usuario[0]->name}}" @else value="{{old('nombre')}}" @endif>
                                             </div>
                                             <div class="form-group col-md-4">
                                               <label for="Apellido">Apellido:</label>
-                                              <input type="text" class="form-control" name="apellido" @if(isset($id_crear)) value="{{$usuario[0]->last_name}}" @else value="" @endif>
+                                              <input type="text" class="form-control" name="apellido" @if(isset($id_crear)) value="{{$usuario[0]->last_name}}" @else value="{{old('apellido')}}" @endif>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="CI">CI:</label>
-                                                <input type="text" class="form-control" name="ci" @if(isset($id_crear)) value="{{$usuario[0]->ci}}" @else value="" @endif>
+                                                <input type="text" class="form-control" name="ci" @if(isset($id_crear)) value="{{$usuario[0]->ci}}" @else value="{{old('ci')}}" @endif>
                                               </div>
                                     </div>
                                 <hr>
                                 <h5>Reserva</h5>
                                 <hr>
+                                <?php date_default_timezone_set('America/La_Paz');?>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
                                       <label for="fec_evento">Fecha Evento:</label>
-                                      <input type="date" value="{{date("Y-m-d")}}" class="form-control" name="fec_evento">
+                                      <input type="date" @if(old('fec_evento')) value="{{old('fec_evento')}}" @else value="{{date("Y-m-d")}}" @endif class="form-control" name="fec_evento">
                                     </div>
                                     <div class="form-group col-md-4">
                                       <label for="hor_ini_evento">Hora Inicio Evento:</label>
-                                      <input type="time" class="form-control" name="hor_ini_evento" required>
+                                      <input type="time" class="form-control" name="hor_ini_evento" value="{{old('hor_ini_evento')}}" required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Hora Fin Evento:</label>
-                                        <input type="time" class="form-control" name="hor_fin_evento" required>
+                                        <input type="time" class="form-control" name="hor_fin_evento" value="{{old('hor_fin_evento')}}" required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Evento:</label>
-                                        <select name="id_eventos" id="id_eventos" class="form-control">
+                                        <select name="id_eventos" id="id_eventos" class="form-control" @if(isset($id_crear)) disabled @endif>
                                                 @foreach($eventos as $evento)
                                                 <!-- verifica el evento seleccionado en home, y si no se selecciono, se asigna 1 a la variable-->
                                                 @if(!isset($id_crear)) {{$id_crear = 1}} @endif

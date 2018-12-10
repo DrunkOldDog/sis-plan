@@ -135,6 +135,12 @@ class ReservaController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'apellido' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'ci' => 'required|alpha_num|max:10',
+        ]);
+        
         $reserva= \App\Reserva::find($id);
         $reserva->id_eventos=$request->get('id_eventos');
         $reserva->fec_evento=$request->get('fec_evento');

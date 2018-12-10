@@ -89,6 +89,12 @@ class AmbienteController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+            'capacidad' => 'required|numeric|between:0, 1000',
+            'precio' => 'required|numeric|between:0, 10000'
+        ]);
+        
         $ambiente= \App\Ambiente::find($id);
         $ambiente->nombre=$request->get('nombre');
         $ambiente->capacidad=$request->get('capacidad');

@@ -35,21 +35,21 @@
                                     <div class="row">
                                             <div class="form-group col-md-6">
                                               <label for="Nombre">Nombre:</label>
-                                              <input type="text" class="form-control" name="nombre">
+                                              <input type="text" class="form-control" value="{{old('nombre')}}" name="nombre">
                                             </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="form-group col-md-6">
                                           <label for="Capacidad">Capacidad:</label>
-                                          <input type="number" class="form-control" name="capacidad">
+                                          <input type="number" class="form-control" min="1" value="{{old('capacidad')}}" name="capacidad">
                                         </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                       <label for="Precio">Precio:</label>
-                                      <input type="text" class="form-control" name="precio">
+                                      <input type="text" class="form-control" value="{{old('precio')}}" name="precio">
                                     </div>
                                 </div>
 
