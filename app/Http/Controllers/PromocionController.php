@@ -21,7 +21,7 @@ class PromocionController extends Controller
                 ->orderBy('id_ambientes')
                 ->get(); 
        $eventos=\App\Promocion::paginate(10);
-       $eventos = \App\Promocion::whereNotNull('fecha_inicio')->orderBy('id_eventos')->get();
+       $eventos = \App\Promocion::whereNotNull('fecha_inicio')->whereNull('estado')->orderBy('id_eventos')->get();
        return view('promocion.index',compact('eventos','ambientes'));
     }
 

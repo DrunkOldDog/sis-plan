@@ -21,7 +21,11 @@
         <div class="row">
             <div class="col">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Paquetes Disponibles:</h3>
+                        @if(auth()->user()->isAdmin != 0)
+                            <h3 class="mb-0">Paquetes Disponibles:</h3>
+                        @else 
+                            <h3 class="mb-0">Mis Paquetes:</h3>
+                        @endif
                     </div>
 
                     <div class="table-responsive">
@@ -30,7 +34,9 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Precio</th>
+                                @if(auth()->user()->isAdmin != 0)
                                 <th>Descripcion</th>
+                                @endif
                                 <th colspan="2">Action</th>
                             </tr>
                             </thead>
@@ -39,9 +45,10 @@
                             <tr>
                                 <td>{{$evento['nombre']}}</td>
                                 <td>{{$evento['precio_total']}}Bs.</td>
+                                @if(auth()->user()->isAdmin != 0)
                                 <td><p>{{$evento['descripcion']}}</p></td>
-
                                 <td><a href="{{action('EventoController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Edit</a></td>
+                                @endif
                                 <td>
                                     <form action="{{action('EventoController@destroy', $evento['id_eventos'])}}" method="post">
                                         @csrf
@@ -53,8 +60,9 @@
                             @endforeach
                             </tbody>
                         </table>
-
+                        @if(auth()->user()->isAdmin != 0)
                         <a href="{{action('EventoController@create')}}" class="btn btn-primary">Registro</a>
+                        @endif
                     </div>
                 </div>
             </div>

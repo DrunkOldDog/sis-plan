@@ -26,9 +26,19 @@ class ReservaController extends Controller
                     ->select('*')
                     ->orderBy('id_clientes')
                     ->get();
+                    
+        date_default_timezone_set('America/La_Paz');
 
         $reservas=\App\Reserva::paginate(10);
-        $reservas = \App\Reserva::orderBy('fec_evento')->get();
+        if(auth()->user()->isAdmin == 0){
+            $reservas = \App\Reserva::where('id_clientes', Auth::id())->orderBy('fec_evento')->get();
+        }else{
+            if(auth()->user()->isAdmin == 1){
+                $reservas = \App\Reserva::orderBy('fec_evento')->get();
+            }else{
+                $reservas = \App\Reserva::where('fec_evento', '>=', date("Y-m-d"))->orderBy('fec_evento')->get();
+            } 
+        }
         return view('reserva.index',compact('reservas','eventos','clientes'));
     }
 

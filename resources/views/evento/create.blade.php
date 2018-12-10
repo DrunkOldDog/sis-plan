@@ -127,17 +127,69 @@
                                   @endif
                                   @endforeach
                                 </div>
-
-                                <div class="row">
-                                  <div class="col-md-4"></div>
-                                  <div class="form-group col-md-4" style="margin-top:60px">
-                                    <button type="submit" class="btn btn-success">Submit</button>
-                                  </div>
-                                </div>
-                              </form>
-
                     </div> <!-- end card body-->
+                  @if(isset($auxiliar))
+                  <!-- Parte para reservar-->
+                  <div class="card-header bg-white border-0">
+                      <div class="row align-items-center">
+                          <div class="col-8">
+                                <input type="text" value="1" name="auxiliar" hidden>
+                                <h4 class="mb-0">Datos Personales:</h4>
+                          </div>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="card-body">
+                      <div class="form-row">
+                          <div class="form-group col-md-4">
+                            <label for="Nombre">Nombre:</label>
+                          <input type="text" class="form-control" name="nombre_res" value="{{auth()->user()->name}}" disabled>
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label for="Apellido">Apellido:</label>
+                            <input type="text" class="form-control" name="apellido" value="{{auth()->user()->last_name}}" disabled>
+                          </div>
+                          <div class="form-group col-md-4">
+                              <label for="CI">CI:</label>
+                              <input type="text" class="form-control" name="ci" value="{{auth()->user()->ci}}" disabled>
+                          </div>
+                  </div>
+                  </div>
+                  <div class="card-header bg-white border-0">
+                      <div class="row align-items-center">
+                          <div class="col-8">
+                                <input type="text" value="1" name="auxiliar" hidden>
+                                <h4 class="mb-0">Reserva:</h4>
+                          </div>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="card-body">
+                      <div class="form-row">
+                          <div class="form-group col-md-4">
+                              <label for="fec_evento">Fecha Evento:</label>
+                              <input type="date" @if(old('fec_evento')) value="{{old('fec_evento')}}" @else value="{{date("Y-m-d")}}" @endif min="{{date("Y-m-d")}}" class="form-control" name="fec_evento">
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label for="hor_ini_evento">Hora Inicio Evento:</label>
+                              <input type="time" class="form-control" name="hor_ini_evento" value="{{old('hor_ini_evento')}}" required>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="hor_fin_evento">Hora Fin Evento:</label>
+                                <input type="time" class="form-control" name="hor_fin_evento" value="{{old('hor_fin_evento')}}" required>
+                            </div>
+                  </div>
+                  @endif
+
+                  <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="form-group col-md-4" style="margin-top:60px">
+                      <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                  </div>
+
             </div>
+          </form>
         </div>
     </div>
 </div>

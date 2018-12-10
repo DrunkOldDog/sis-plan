@@ -38,15 +38,15 @@
                                     <div class="form-row">
                                             <div class="form-group col-md-4">
                                               <label for="Nombre">Nombre:</label>
-                                            <input type="text" class="form-control" name="nombre" @if(isset($id_crear)) value="{{$usuario[0]->name}}" @else value="{{old('nombre')}}" @endif>
+                                            <input type="text" class="form-control" name="nombre" @if(isset($id_crear)) value="{{$usuario[0]->name}}" readonly @else value="{{old('nombre')}}" @endif>
                                             </div>
                                             <div class="form-group col-md-4">
                                               <label for="Apellido">Apellido:</label>
-                                              <input type="text" class="form-control" name="apellido" @if(isset($id_crear)) value="{{$usuario[0]->last_name}}" @else value="{{old('apellido')}}" @endif>
+                                              <input type="text" class="form-control" name="apellido" @if(isset($id_crear)) value="{{$usuario[0]->last_name}}" readonly @else value="{{old('apellido')}}" @endif>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="CI">CI:</label>
-                                                <input type="text" class="form-control" name="ci" @if(isset($id_crear)) value="{{$usuario[0]->ci}}" @else value="{{old('ci')}}" @endif>
+                                                <input type="text" class="form-control" name="ci" @if(isset($id_crear)) value="{{$usuario[0]->ci}}" readonly @else value="{{old('ci')}}" @endif>
                                               </div>
                                     </div>
                                 <hr>
@@ -68,16 +68,20 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Evento:</label>
-                                        <select name="id_eventos" id="id_eventos" class="form-control" @if(isset($id_crear)) disabled @endif>
+                                        <select name="id_eventos" id="id_eventos" class="form-control">
                                                 @foreach($eventos as $evento)
                                                 <!-- verifica el evento seleccionado en home, y si no se selecciono, se asigna 1 a la variable-->
-                                                @if(!isset($id_crear)) {{$id_crear = 1}} @endif
-                                                @if($evento->id_eventos == $id_crear)
-                                                <option value="{{$evento->id_eventos}}" selected>{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
+                                                @if(isset($id_crear)) 
+                                                    @if($evento->id_eventos == $id_crear)
+                                                    <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
+                                                    @endif
                                                 @else
-                                                <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>@endif
+                                                    @if(!$evento->estado)
+                                                    <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
+                                                    @endif
+                                                @endif     
                                                 @endforeach
-                                             </select>                                 
+                                             </select>                            
                                     </div>
                                  </div>
                             

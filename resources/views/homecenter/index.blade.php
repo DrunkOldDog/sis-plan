@@ -25,7 +25,7 @@
                                             <h5 class="subtit">{{$evento->nombre}}</h5>
                                             <div class="caption">
                                                     Del: {{date("d/m/Y", strtotime($evento->fecha_inicio))}}&nbsp;al: {{date("d/m/Y", strtotime($evento->fecha_fin))}}
-                                                    <h6>Decuento del: {{$evento->descuento*100}}%!!!</h6>
+                                                    <h6>Precio: {{$evento->precio_total}}Bs. con un descuento del {{$evento->descuento*100}}%!!!</h6>
                                                     <p>{{$evento->descripcion}}</p>
                                             </div>
                                             </a>
@@ -39,7 +39,7 @@
                         <div class="card-header bg-white border-0">
                                 <div class="row align-items-center">
                                     <div class="col-8">
-                                        <h3 class="mb-0">Reservas Disponibles:</h3>
+                                        <h3 class="mb-0">Paquetes Disponibles:</h3>
                                     </div>
                                 </div>
                             </div>
@@ -54,6 +54,7 @@
                                                 <img src="../../../images/{{$evento->foto}}" alt="Lights" style="width:100%">
                                                 <h5 class="subtit">{{$evento->nombre}}</h5>
                                                 <div class="caption">
+                                                        <h6>Precio: {{$evento->precio_total}}Bs.</h6>
                                                         <p>{{$evento->descripcion}}</p>
                                                 </div>
                                                 </a>

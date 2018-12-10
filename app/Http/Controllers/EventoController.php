@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Carbon;
 
 class EventoController extends Controller
 {
@@ -19,13 +20,15 @@ class EventoController extends Controller
     public function index()
     {
         //
-        $ambientes = DB::table('ambientes')
-                 ->select('*')
-                 ->orderBy('id_ambientes')
-                 ->get(); 
         $eventos=\App\Evento::paginate(10);
-        $eventos = \App\Evento::whereNull('fecha_inicio')->orderBy('id_eventos')->get();
-        return view('evento.index',compact('eventos','ambientes'));
+        if(auth()->user()->isAdmin == 0){
+            $eventos = \App\Evento::join('eventos_cliente', 'eventos_cliente.id_eventos', '=', 'eventos.id_eventos')
+                    ->where('eventos_cliente.id_clientes', Auth::id())
+                    ->get();
+        }else{
+            $eventos = \App\Evento::whereNull('fecha_inicio')->whereNull('estado')->orderBy('id_eventos')->get();
+        }
+        return view('evento.index',compact('eventos'));
     }
 
     /**
@@ -154,13 +157,25 @@ class EventoController extends Controller
                 $aux++;
             }
         }
+        $mytime = Carbon\Carbon::now();
+        date_default_timezone_set('America/La_Paz');
 
-        //en caso de ser usuario, agregar evento a eventos_cliente
+        //en caso de ser usuario, agregar evento a eventos_cliente y crear reserva
         if(auth()->user()->isAdmin == 0){
             DB::table('eventos_cliente')->insert(
                 array(
                     'id_eventos' => $evento->id_eventos,
                     'id_clientes' => Auth::id()
+                )
+            );
+            DB::table('reservas')->insert(
+                array(
+                    'id_clientes' => Auth::id(),
+                    'id_eventos' => $evento->id_eventos,
+                    'fec_reserva' => $mytime->toDateTimeString(),
+                    'fec_evento' => $request->input('fec_evento'),
+                    'hor_ini_evento' => $request->input('hor_ini_evento'),
+                    'hor_fin_evento' => $request->input('hor_fin_evento'),
                 )
             );
         }
