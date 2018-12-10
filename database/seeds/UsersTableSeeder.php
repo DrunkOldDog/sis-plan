@@ -23,5 +23,12 @@ class UsersTableSeeder extends Seeder
               'isAdmin' => 1,
             ]
         ]);
+        DB::table('clientes')->insert(
+            array(
+                'nombre' => 'Juan',
+                'apellido' => 'Reyes',
+                'ci' => '6170152LP'
+            )
+        );
     }
 }

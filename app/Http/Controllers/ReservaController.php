@@ -63,14 +63,6 @@ class ReservaController extends Controller
             'ci' => 'required|alpha_num|max:10',
         ]);
 
-        DB::table('clientes')->insert(
-            array(
-                'nombre' => $request->get('nombre'),
-                'apellido' => $request->get('apellido'),
-                'ci' => $request->get('ci')
-            )
-        );
-
         $cliente = DB::table('clientes')
                     ->select('*')
                     ->where('nombre', $request->get('nombre'))

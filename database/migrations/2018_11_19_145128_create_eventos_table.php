@@ -25,6 +25,7 @@ class CreateEventosTable extends Migration
             $table->date('fecha_inicio')->nullable();
             $table->date('fecha_fin')->nullable();
             $table->decimal('descuento', 2, 2)->nullable();
+            $table->boolean('estado')->nullable();
             $table->timestamps();
         });
     }

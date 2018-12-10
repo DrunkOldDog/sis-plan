@@ -16,7 +16,7 @@
                         <div class="card-body">
                             <div class="form-row">
                                 @foreach($eventos as $evento)
-                                @if($evento->fecha_inicio)
+                                @if($evento->fecha_inicio && $evento->estado == 0)
                                     @if($evento->fecha_fin >= date("Y-m-d"))
                                     <div class="col-md-4">
                                         <div class="thumbnail">
@@ -47,7 +47,7 @@
                             <div class="card-body">
                                     <div class="form-row">
                                         @foreach($eventos as $evento)
-                                        @if(!$evento->fecha_inicio)
+                                        @if(!$evento->fecha_inicio && $evento->estado == 0)
                                         <div class="col-md-4">
                                             <div class="thumbnail">
                                                 <a href="{{ route('test.route', $evento->id_eventos) }}" method="GET">

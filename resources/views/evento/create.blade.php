@@ -24,7 +24,12 @@
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">Creacion de Paquetes:</h3>
+                                @if(!isset($auxiliar))
+                                  <h3 class="mb-0">Creacion de Paquetes:</h3>
+                                @else 
+                                  <input type="text" value="1" name="auxiliar" hidden>
+                                  <h3 class="mb-0">Crear Reserva Personalizada:</h3>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -40,10 +45,10 @@
                                             </div>
                                             <div class="form-group col-md-6">
                                               <label for="Precio">Precio:</label>
-                                              <input type="text" class="form-control" value="{{old('precio')}}" name="precio">
+                                              <input type="text" class="form-control" @if(isset($auxiliar)) value="1500" disabled @else value="{{old('precio')}}" @endif name="precio">
                                             </div>
                                     </div>
-
+                                @if(!isset($auxiliar))
                                 <div class="row">
                                     <div class="form-group col-md-12">
                                       <label for="Descripcion">Descripcion:</label>
@@ -57,6 +62,7 @@
                                           <input type="file" accept="image/*" name="imagen">
                                     </div>
                                 </div>
+                                @endif
                                 <br>
                                 <div class="row">
                                   <div class="form-group col-md-6">

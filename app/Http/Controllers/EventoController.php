@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
@@ -68,25 +69,36 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required|alpha|max:20',
-            'precio' => 'required|numeric|min:0',
-            'descripcion' => 'required',
-            'imagen' => 'required|image|max:5000'
-        ]);
+        if(auth()->user()->isAdmin != 0){
+            $request->validate([
+                'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+                'precio' => 'required|numeric|min:0',
+                'descripcion' => 'required',
+                'imagen' => 'required|image|max:5000'
+            ]);
+        }else{
+            $request->validate([
+                'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20'
+            ]);
+        }
 
-        if($request->hasfile('imagen'))
-         {
-            $file = $request->file('imagen');
-            $name=time().$file->getClientOriginalName();
-            $file->move(public_path().'/images/', $name);
-         }
         $evento= new \App\Evento;
         $evento->id_ambientes = $request->input('id_ambientes');
         $evento->nombre=$request->get('nombre');
-        $evento->precio=$request->get('precio');
+        if(auth()->user()->isAdmin == 0){
+            $evento->precio=1500;
+            $evento->estado=1;
+        }else{
+            $evento->precio=$request->get('precio');
+        }
         $evento->descripcion=$request->get('descripcion');
-        $evento->foto = $name;
+        if($request->hasfile('imagen'))
+        {
+           $file = $request->file('imagen');
+           $name=$file->getClientOriginalName();
+           $file->move(public_path().'/images/', $name);
+           $evento->foto = $name;
+        }
         $evento->save();
         
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
@@ -141,6 +153,16 @@ class EventoController extends Controller
                 $total = $total + $myInputs[$aux]*$combi->precio;
                 $aux++;
             }
+        }
+
+        //en caso de ser usuario, agregar evento a eventos_cliente
+        if(auth()->user()->isAdmin == 0){
+            DB::table('eventos_cliente')->insert(
+                array(
+                    'id_eventos' => $evento->id_eventos,
+                    'id_clientes' => Auth::id()
+                )
+            );
         }
 
         //proceso para sacar un total final
@@ -236,7 +258,7 @@ class EventoController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nombre' => 'required|alpha|max:20',
+            'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
             'precio' => 'required|numeric|min:0',
             'descripcion' => 'required',
             'imagen' => 'nullable|image|max:5000'
@@ -356,5 +378,32 @@ class EventoController extends Controller
                 ->where('id_eventos', $id)
                 ->delete();
         return redirect('eventos')->with('success','Se elimino correctamente.');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function personal($id)
+    {
+        //obtener todos los servicios disponibles
+        $servicios = DB::table('servicios')
+               ->select('*')
+               ->orderBy('id_servicios')
+               ->get();
+        //obtener todos los ambientes disponibles
+        $ambientes = DB::table('ambientes')
+                ->select('*')
+                ->orderBy('id_ambientes')
+                ->get();
+        //obtener los servicios con servicios especificos
+        $serviciosespecificos = DB::table('servicios')
+                              ->select('servicios.id_servicios','servicios.nombre')
+                              ->join('productos_servicio', 'servicios.id_servicios', '=', 'productos_servicio.id_servicios')
+                              ->groupBy('servicios.id_servicios','servicios.nombre')
+                              ->get();
+        $auxiliar = 1;
+        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'auxiliar'));
     }
 }

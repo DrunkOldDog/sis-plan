@@ -25,6 +25,11 @@
                 <a class="nav-link" href="#">Precios</a>
               </li>
               @endif
+              @if(auth()->user()->isAdmin == 0)
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('eve.per', auth()->user()->id)}}">Reserva Personalizada</a>
+                </li>
+              @endif
               @if(auth()->user()->isAdmin == 1)
               <li class="nav-item">
                   <a class="nav-link" href="#">Dashboard</a>
