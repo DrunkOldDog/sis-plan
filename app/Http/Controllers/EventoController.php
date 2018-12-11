@@ -82,7 +82,8 @@ class EventoController extends Controller
                 'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
                 'precio' => 'required|numeric|min:0',
                 'descripcion' => 'required',
-                'imagen' => 'required|image|max:5000'
+                'imagen' => 'required|image|max:5000',
+                'ambients' => 'required'
             ]);
         }else{
             $request->validate([
@@ -334,7 +335,8 @@ class EventoController extends Controller
             'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
             'precio' => 'required|numeric|min:0',
             'descripcion' => 'required',
-            'imagen' => 'nullable|image|max:5000'
+            'imagen' => 'nullable|image|max:5000',
+            'ambients' => 'required'
         ]);
 
         $evento= \App\Evento::find($id);

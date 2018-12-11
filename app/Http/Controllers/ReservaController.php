@@ -80,7 +80,7 @@ class ReservaController extends Controller
 
         date_default_timezone_set('America/La_Paz');
         $mytime = Carbon\Carbon::now();
-        echo $mytime->toDateTimeString();
+        //echo $mytime->toDateTimeString();
 
         $reserva= new \App\Reserva;
         $reserva->id_clientes=$cliente[0]->id_clientes;
@@ -89,8 +89,28 @@ class ReservaController extends Controller
         $reserva->fec_evento=$request->get('fec_evento');
         $reserva->hor_ini_evento=$request->get('hor_ini_evento');
         $reserva->hor_fin_evento=$request->get('hor_fin_evento');
-        $reserva->save();
-        
+
+        //parsear el string de horas a tiempo
+        $hora_ap = Carbon\Carbon::parse($reserva->hor_ini_evento);
+        $hora_ci = Carbon\Carbon::parse($reserva->hor_fin_evento);
+
+        //validaciones
+        //hora inicio menor a hora fin
+        if($reserva->hor_ini_evento >= $reserva->hor_fin_evento){
+            if($hora_ci->hour > 4){
+                return back()->withInput()->withErrors("La hora de inicio: " .$reserva->hor_ini_evento. " debe ser menor a la hora fin: " .$reserva->hor_fin_evento. " y la hora fin debe ser menor a las 5am.");
+            }
+        }
+        //hora apertura mayor a 10am
+        if($hora_ap->hour < 10){
+            return back()->withInput()->withErrors("Los eventos en el hotel empiezan a las 10am.");
+        }
+        //la reserva debe ser en una hora exacta
+        if($hora_ap->minute != 0 || $hora_ci->minute != 0){
+            return back()->withInput()->withErrors("Los eventos unicamente funcionan en horas exactas. (Ejemplo 10:00-12:00)");
+        }
+
+        $reserva->save();  
         return redirect('reservas')->with('success', 'Se almaceno la informacion correctamente.');
     }
 
@@ -199,6 +219,13 @@ class ReservaController extends Controller
                         ->orderBy('servicios.id_servicios')
                         ->get();
 
+        $incAmbiente = DB::table('ambientes')
+                        ->select('*')
+                        ->join('eventos_ambiente', 'eventos_ambiente.id_ambientes', '=', 'ambientes.id_ambientes')
+                        ->where('eventos_ambiente.id_eventos', $id_crear)
+                        ->orderBy('ambientes.id_ambientes')
+                        ->get();
+
         $incProducto = DB::table('productos')
                         ->select('*')
                         ->join('productos_servicio', 'productos_servicio.id_productos', '=', 'productos.id_productos')
@@ -208,6 +235,6 @@ class ReservaController extends Controller
                         ->orderBy('productos.id_productos')
                         ->get();
 
-        return view('reserva.create', compact('eventos','id_crear','usuario','incHabitacion','incServicio','incProducto'));
+        return view('reserva.create', compact('eventos','id_crear','usuario','incAmbiente','incHabitacion','incServicio','incProducto'));
     }
 }

@@ -59,6 +59,14 @@
                                             @endforeach
                                             </ul>
                                         </div>
+                                        <div class="form-group col-md-5">
+                                            <label for="Ambientes">Ambientes:</label>
+                                            <ul>
+                                            @foreach($incAmbiente as $ambient)
+                                                <li><strong>{{$ambient->nombre}}</strong>. Capacidad para <strong>{{$ambient->capacidad}}</strong> personas.</li>
+                                            @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
                                 @endif
                                 <h5>Datos Cliente</h5>
