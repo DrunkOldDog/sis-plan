@@ -52,11 +52,18 @@
                                 <hr>
                                 <h5>Reserva</h5>
                                 <hr>
+                                @if(isset($id_crear))
+                                    @foreach($eventos as $evento)
+                                        @if($evento->id_eventos == $id_crear && $evento->fecha_fin)
+                                            <?php $fecha_fin = $evento->fecha_fin; $fecha_inicio =  $evento->fecha_inicio;?>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <?php date_default_timezone_set('America/La_Paz');?>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                      <label for="fec_evento">Fecha Evento:</label>
-                                      <input type="date" @if(old('fec_evento')) value="{{old('fec_evento')}}" @else value="{{date("Y-m-d")}}" @endif class="form-control" name="fec_evento">
+                                      <label for="fec_evento">Fecha Evento:  @if(isset($fecha_inicio)) (Del: {{date("d/m/Y", strtotime($fecha_inicio))}} al {{date("d/m/Y", strtotime($fecha_fin))}}) @endif</label>
+                                      <input type="date" @if(old('fec_evento')) value="{{old('fec_evento')}}" @else value="{{date("Y-m-d")}}" @endif min="{{date("Y-m-d")}}" @if(isset($fecha_fin)) max="{{$fecha_fin}}" @endif class="form-control" name="fec_evento">
                                     </div>
                                     <div class="form-group col-md-4">
                                       <label for="hor_ini_evento">Hora Inicio Evento:</label>
@@ -84,13 +91,14 @@
                                              </select>                            
                                     </div>
                                  </div>
-                            
+                                
                                 <div class="row">
                                   <div class="col-md-4"></div>
                                   <div class="form-group col-md-4" style="margin-top:60px">
                                     <button type="submit" class="btn btn-success">Submit</button>
                                   </div>
                                 </div>
+
                               </form>
 
                     </div>

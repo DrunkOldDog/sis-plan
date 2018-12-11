@@ -40,7 +40,11 @@
                                     <br>
                                     <div class="form-row">
                                             <div class="form-group col-md-6">
-                                              <label for="Nombre">Nombre:</label>
+                                              @if(!isset($auxiliar))
+                                                <label for="Nombre">Nombre:</label>
+                                              @else 
+                                                <label for="Nombre">Nombre del Evento:</label>
+                                              @endif
                                               <input type="text" class="form-control" value="{{old('nombre')}}" name="nombre">
                                             </div>
                                             <div class="form-group col-md-6">
@@ -112,6 +116,20 @@
                                   @endforeach
                                   
                                   <div class="form-group col-md-12"></div>
+
+                                  <div class="form-group col-md-12">
+                                      <h6>Habitaciones</h6>
+                                      <hr>
+                                  </div>
+                                  @foreach($habitaciones as $habitacion)
+                                    <label for="habitacion" id="comple" class="col-sm-2 col-form-label">{{$habitacion->nombre}}&nbsp;({{$habitacion->precio}}Bs.):</label>
+                                    <div class="form-group col-md-1">
+                                        <input type="number" class="form-control" name="habi[]" min="0" value="0">
+                                    </div>
+                                  @endforeach
+                                  
+                                  <div class="form-group col-md-12"></div>
+                                  
                                   <?php $chozni = 0; ?>
                                   @foreach($servicios as $servicio)
                                   @if($servicio->id_servicios != $serviciosespecificos[$chozni]->id_servicios)

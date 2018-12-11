@@ -61,8 +61,9 @@
                             @endforeach
                             </tbody>
                         </table>
-
+                        @if(auth()->user()->isAdmin != 0) 
                         <a href="{{action('ReservaController@create')}}" class="btn btn-primary">Registro</a>
+                        @endif
                     </div>
                 </div>
             </div>

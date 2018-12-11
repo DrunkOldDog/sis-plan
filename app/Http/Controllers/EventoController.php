@@ -48,6 +48,11 @@ class EventoController extends Controller
                  ->select('*')
                  ->orderBy('id_ambientes')
                  ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                 ->select('*')
+                 ->orderBy('id_habitaciones')
+                 ->get();
         //obtener los servicios con servicios especificos
         $serviciosespecificos = DB::table('servicios')
                                 ->select('servicios.id_servicios','servicios.nombre')
@@ -61,7 +66,7 @@ class EventoController extends Controller
         echo $res->getStatusCode(); // 200
         echo $res->getBody();*/
 
-        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'complementos'));
+        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'habitaciones'));
     }
 
     /**
@@ -157,6 +162,28 @@ class EventoController extends Controller
                 $aux++;
             }
         }
+
+        //insertar datos a evento_habitacion
+        $myInputsHab = $request->input('habi');
+        $auxHab = 0;
+        $totalHab = 0;
+        $habitaciones = DB::table('habitaciones')
+                        ->select('*')
+                        ->orderBy('id_habitaciones')
+                        ->get();
+                        
+        foreach($habitaciones as $habitacion){
+                DB::table('habitaciones_evento')->insert(
+                    array(
+                        'id_habitaciones' => $habitacion->id_habitaciones,
+                        'id_eventos' => $evento->id_eventos,
+                        'cantidad' => $myInputsHab[$auxHab],
+                    )
+                );
+            $totalHab = $totalHab + $myInputsHab[$auxHab]*$habitacion->precio;
+            $auxHab++; 
+        }
+
         $mytime = Carbon\Carbon::now();
         date_default_timezone_set('America/La_Paz');
 
@@ -203,7 +230,7 @@ class EventoController extends Controller
         $sum+= $precio->precio;
         }    
         $price = \App\Evento::find($evento->id_eventos);
-        $price->precio_total = $total+$sum+$replik+$evento->precio;
+        $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio;
         $price->save();
         
         return redirect('eventos')->with('success', 'La informacion se almaceno correctamente.');
@@ -238,6 +265,11 @@ class EventoController extends Controller
                  ->select('*')
                  ->orderBy('id_ambientes')
                  ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                ->select('*')
+                ->orderBy('id_habitaciones')
+                ->get();
         //obtener los servicios con servicios especificos
         $serviciosespecificos = DB::table('servicios')
                                 ->select('servicios.id_servicios','servicios.nombre')
@@ -260,7 +292,7 @@ class EventoController extends Controller
                         array_push($marcados, $precio->id_servicios);
                         }
 
-        return view('evento.edit',compact('evento','id','servicios','marcados','ambientes','serviciosespecificos'));
+        return view('evento.edit',compact('evento','id','servicios','marcados','ambientes','serviciosespecificos','habitaciones'));
     }
 
     /**
@@ -349,6 +381,24 @@ class EventoController extends Controller
             }
         }
 
+        //insertar datos a evento_habitacion
+        $myInputsHab = $request->input('habi');
+        $auxHab = 0;
+        $totalHab = 0;
+        $habitaciones = DB::table('habitaciones')
+                        ->select('*')
+                        ->orderBy('id_habitaciones')
+                        ->get();
+                        
+        foreach($habitaciones as $habitacion){
+            DB::table('habitaciones_evento')
+                ->where('id_habitaciones', $habitacion->id_habitaciones)
+                ->where('id_eventos', $evento->id_eventos)
+                ->update(['cantidad' => $myInputsHab[$auxHab]]);
+            $totalHab = $totalHab + $myInputsHab[$auxHab]*$habitacion->precio;
+            $auxHab++; 
+        }
+
         //proceso para sacar un total final
         $ambientes = DB::table('ambientes')
             ->select('*')
@@ -372,7 +422,7 @@ class EventoController extends Controller
         $sum+= $precio->precio;
         }    
         $price = \App\Evento::find($evento->id_eventos);
-        $price->precio_total = $total+$sum+$replik+$evento->precio;
+        $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio;
         $price->save();
 
         return redirect('eventos')->with('success', 'La informacion se edito correctamente.');

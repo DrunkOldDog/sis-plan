@@ -15,6 +15,9 @@ class HomecenterController extends Controller
    public function index()
    {
        //
+       if(auth()->user()->isAdmin != 0){
+            return redirect('reservas');
+       }
        $ambientes = DB::table('ambientes')
                  ->select('*')
                  ->orderBy('id_ambientes')

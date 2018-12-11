@@ -116,6 +116,27 @@
                                       <br><br><br>
                                   @endforeach
                                   <div class="form-group col-md-12"></div>
+
+                                  <div class="form-group col-md-12">
+                                        <h6>Habitaciones</h6>
+                                        <hr>
+                                    </div>
+                                    @foreach($habitaciones as $habitacion)
+                                    <?php
+                                        $cantidadHabitacion = DB::table('habitaciones_evento')
+                                                                ->select('*')
+                                                                ->where('id_habitaciones',$habitacion->id_habitaciones)
+                                                                ->where('id_eventos', $evento['id_eventos'])
+                                                                ->get();
+                                    ?>
+                                      <label for="habitacion" id="comple" class="col-sm-2 col-form-label">{{$habitacion->nombre}}&nbsp;({{$habitacion->precio}}Bs.):</label>
+                                      <div class="form-group col-md-1">
+                                          <input type="number" class="form-control" name="habi[]" min="0" value="{{$cantidadHabitacion[0]->cantidad}}">
+                                      </div>
+                                    @endforeach
+                                    
+                                    <div class="form-group col-md-12"></div>
+                                    
                                   <?php $chozni = 0; $choznita = 0?>
                                         @foreach($servicios as $servicio)
                                         @if($servicio->id_servicios != $serviciosespecificos[$chozni]->id_servicios)
