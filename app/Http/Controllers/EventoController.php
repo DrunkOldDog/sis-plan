@@ -442,6 +442,12 @@ class EventoController extends Controller
         DB::table('servicios_evento')
                 ->where('id_eventos', $id)
                 ->delete();
+        DB::table('habitaciones_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+        DB::table('productos_evento')
+                ->where('id_eventos', $id)
+                ->delete();
         return redirect('eventos')->with('success','Se elimino correctamente.');
     }
 

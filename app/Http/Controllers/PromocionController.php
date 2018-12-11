@@ -16,13 +16,9 @@ class PromocionController extends Controller
      */
     public function index()
     {
-        $ambientes = DB::table('ambientes')
-                ->select('*')
-                ->orderBy('id_ambientes')
-                ->get(); 
        $eventos=\App\Promocion::paginate(10);
        $eventos = \App\Promocion::whereNotNull('fecha_inicio')->whereNull('estado')->orderBy('id_eventos')->get();
-       return view('promocion.index',compact('eventos','ambientes'));
+       return view('promocion.index',compact('eventos'));
     }
 
     /**
@@ -42,6 +38,11 @@ class PromocionController extends Controller
               ->select('*')
               ->orderBy('id_ambientes')
               ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                 ->select('*')
+                 ->orderBy('id_habitaciones')
+                 ->get();
         //obtener los servicios con servicios especificos
         $serviciosespecificos = DB::table('servicios')
             ->select('servicios.id_servicios','servicios.nombre')
@@ -49,7 +50,7 @@ class PromocionController extends Controller
             ->groupBy('servicios.id_servicios','servicios.nombre')
             ->get();
 
-        return view('promocion.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'complementos'));
+        return view('promocion.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'habitaciones'));
     }
 
     /**
@@ -142,6 +143,27 @@ class PromocionController extends Controller
             }
         }
 
+        //insertar datos a evento_habitacion
+        $myInputsHab = $request->input('habi');
+        $auxHab = 0;
+        $totalHab = 0;
+        $habitaciones = DB::table('habitaciones')
+                        ->select('*')
+                        ->orderBy('id_habitaciones')
+                        ->get();
+                        
+        foreach($habitaciones as $habitacion){
+                DB::table('habitaciones_evento')->insert(
+                    array(
+                        'id_habitaciones' => $habitacion->id_habitaciones,
+                        'id_eventos' => $evento->id_eventos,
+                        'cantidad' => $myInputsHab[$auxHab],
+                    )
+                );
+            $totalHab = $totalHab + $myInputsHab[$auxHab]*$habitacion->precio;
+            $auxHab++; 
+        }
+
         //proceso para sacar un total final
         $ambientes = DB::table('ambientes')
             ->select('*')
@@ -165,7 +187,7 @@ class PromocionController extends Controller
         $sum+= $precio->precio;
         }    
         $price = \App\Evento::find($evento->id_eventos);
-        $price->precio_total = $total+$sum+$replik+$evento->precio - ($total+$sum+$replik+$evento->precio)*$evento->descuento;
+        $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio - ($total+$totalHab+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
         
         return redirect('promociones')->with('success', 'La informacion se agrego correctamente.');
@@ -200,6 +222,11 @@ class PromocionController extends Controller
                 ->select('*')
                 ->orderBy('id_ambientes')
                 ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                ->select('*')
+                ->orderBy('id_habitaciones')
+                ->get();
        //obtener los servicios con servicios especificos
        $serviciosespecificos = DB::table('servicios')
                 ->select('servicios.id_servicios','servicios.nombre')
@@ -222,7 +249,7 @@ class PromocionController extends Controller
                 array_push($marcados, $precio->id_servicios);
                 }
 
-       return view('promocion.edit',compact('evento','id','servicios','marcados','ambientes','serviciosespecificos'));
+       return view('promocion.edit',compact('evento','id','servicios','marcados','ambientes','serviciosespecificos', 'habitaciones'));
     }
 
     /**
@@ -319,6 +346,24 @@ class PromocionController extends Controller
             }
         }
 
+         //insertar datos a evento_habitacion
+         $myInputsHab = $request->input('habi');
+         $auxHab = 0;
+         $totalHab = 0;
+         $habitaciones = DB::table('habitaciones')
+                         ->select('*')
+                         ->orderBy('id_habitaciones')
+                         ->get();
+                         
+         foreach($habitaciones as $habitacion){
+             DB::table('habitaciones_evento')
+                 ->where('id_habitaciones', $habitacion->id_habitaciones)
+                 ->where('id_eventos', $evento->id_eventos)
+                 ->update(['cantidad' => $myInputsHab[$auxHab]]);
+             $totalHab = $totalHab + $myInputsHab[$auxHab]*$habitacion->precio;
+             $auxHab++; 
+         }
+
         //proceso para sacar un total final
         $ambientes = DB::table('ambientes')
             ->select('*')
@@ -342,7 +387,7 @@ class PromocionController extends Controller
         $sum+= $precio->precio;
         }    
         $price = \App\Evento::find($evento->id_eventos);
-        $price->precio_total = $total+$sum+$replik+$evento->precio - ($total+$sum+$replik+$evento->precio)*$evento->descuento;
+        $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio - ($total+$totalHab+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
 
         return redirect('promociones')->with('success', 'La informacion se edito correctamente.');;
@@ -363,6 +408,9 @@ class PromocionController extends Controller
                 ->where('id_eventos', $id)
                 ->delete();
         DB::table('productos_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+        DB::table('habitaciones_evento')
                 ->where('id_eventos', $id)
                 ->delete();
         return redirect('promociones')->with('success','Se elimino correctamente.');

@@ -25,7 +25,7 @@
                                             <h5 class="subtit">{{$evento->nombre}}</h5>
                                             <div class="caption">
                                                     Del: {{date("d/m/Y", strtotime($evento->fecha_inicio))}}&nbsp;al: {{date("d/m/Y", strtotime($evento->fecha_fin))}}
-                                                    <h6>Precio: {{$evento->precio_total}}Bs. con un descuento del {{$evento->descuento*100}}%!!!</h6>
+                                                    <h6>Precio con Descuento: {{$evento->precio_total}}Bs. incluye un descuento del {{$evento->descuento*100}}%!!!</h6>
                                                     <p>{{$evento->descripcion}}</p>
                                             </div>
                                             </a>
