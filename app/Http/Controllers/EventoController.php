@@ -468,6 +468,11 @@ class EventoController extends Controller
                 ->select('*')
                 ->orderBy('id_ambientes')
                 ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                ->select('*')
+                ->orderBy('id_habitaciones')
+                ->get();
         //obtener los servicios con servicios especificos
         $serviciosespecificos = DB::table('servicios')
                               ->select('servicios.id_servicios','servicios.nombre')
@@ -475,6 +480,6 @@ class EventoController extends Controller
                               ->groupBy('servicios.id_servicios','servicios.nombre')
                               ->get();
         $auxiliar = 1;
-        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'auxiliar'));
+        return view('evento.create', compact('servicios', 'ambientes', 'serviciosespecificos', 'auxiliar', 'habitaciones'));
     }
 }

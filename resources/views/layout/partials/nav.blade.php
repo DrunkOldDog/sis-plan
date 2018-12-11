@@ -24,11 +24,11 @@
               </li>
               @endif
               @if(auth()->user()->isAdmin == 0)
-              <li class="nav-item active">
-                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+              <li class="nav-item">
+                  <a class="nav-link" href="/">Home</a>
                 </li>
                <li class="nav-item">
-                  <a class="nav-link" href="{{ route('eve.per', auth()->user()->id)}}">Reserva Personalizada</a>
+                  <a class="nav-link" href="{{ route('eve.per', 'crear')}}">Reserva Personalizada</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('eventos') }}">Mis Paquetes</a>
