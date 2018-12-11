@@ -31,7 +31,36 @@
                     <div class="card-body">
                             <form method="post" action="{{url('reservas')}}" enctype="multipart/form-data">
                                 @csrf
-                                
+                                @if(isset($id_crear))
+                                    <h5>Incluye:</h5>
+                                    <hr>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-4">
+                                            <label for="Productos">Productos:</label>
+                                            <ul>
+                                            @foreach($incProducto as $product)
+                                                <li>{{$product->cantidad}} Unidades de {{$product->nombre}}</li>
+                                            @endforeach
+                                            </ul>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="Servicios">Servicios:</label>
+                                            <ul>
+                                            @foreach($incServicio as $service)
+                                                <li>Servicio de {{$service->nombre}}</li>
+                                            @endforeach
+                                            </ul>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="Habitaciones">Habitaciones:</label>
+                                            <ul>
+                                            @foreach($incHabitacion as $room)
+                                                <li>{{$room->cantidad}} Habitaciones {{$room->nombre}}</li>
+                                            @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
                                 <h5>Datos Cliente</h5>
                                 <hr>
                                 <!-- se verifica si fue direccionado desde Home, para llenar directamente los datos del cliente-->

@@ -183,7 +183,31 @@ class ReservaController extends Controller
                 ->select('*')
                 ->where('id', Auth::id())
                 ->get();
-                
-        return view('reserva.create', compact('eventos','id_crear','usuario'));
+        
+        $incHabitacion = DB::table('habitaciones')
+                        ->select('*')
+                        ->join('habitaciones_evento', 'habitaciones_evento.id_habitaciones', '=', 'habitaciones.id_habitaciones')
+                        ->where('habitaciones_evento.id_eventos', $id_crear)
+                        ->where('habitaciones_evento.cantidad', '!=', 0)
+                        ->orderBy('habitaciones.id_habitaciones')
+                        ->get();
+
+        $incServicio = DB::table('servicios')
+                        ->select('*')
+                        ->join('servicios_evento', 'servicios_evento.id_servicios', '=', 'servicios.id_servicios')
+                        ->where('servicios_evento.id_eventos', $id_crear)
+                        ->orderBy('servicios.id_servicios')
+                        ->get();
+
+        $incProducto = DB::table('productos')
+                        ->select('*')
+                        ->join('productos_servicio', 'productos_servicio.id_productos', '=', 'productos.id_productos')
+                        ->join('productos_evento', 'productos_evento.id_productos_servicio', '=', 'productos_servicio.id_productos_servicio')
+                        ->where('productos_evento.id_eventos', $id_crear)
+                        ->where('productos_evento.cantidad', '!=', 0)
+                        ->orderBy('productos.id_productos')
+                        ->get();
+
+        return view('reserva.create', compact('eventos','id_crear','usuario','incHabitacion','incServicio','incProducto'));
     }
 }
