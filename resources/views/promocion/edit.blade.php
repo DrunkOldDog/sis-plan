@@ -60,19 +60,6 @@
                                     </div>
 
                                     <br>
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                          <label for="Ambientes">Ambientes:</label>
-                                          <select name="id_ambientes" id="id_ambientes" class="form-control">
-                                                  @foreach($ambientes as $ambiente)
-                                                  @if($ambiente->id_ambientes == $evento['id_ambientes'])
-                                                  <option value="{{$ambiente->id_ambientes}}" selected>{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>
-                                                  @else
-                                                  <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>@endif
-                                                  @endforeach
-                                               </select>
-                                        </div>
-                                      </div>
 
                                       <?php date_default_timezone_set('America/La_Paz');?>
                                       <div class="form-row">
@@ -94,6 +81,29 @@
                                         <div class="form-group col-md-12">
                                             <label for="Nombre">Servicios Adicionales:</label>
                                         </div>
+
+                                        <div class="form-group col-md-12">
+                                            <h6>Ambientes</h6>
+                                            <hr>
+                                        </div>
+                                        <?php $chozniAmb = 0;?>
+                                        @foreach($ambientes as $ambiente)
+                                              <div class="form-group col-md-4">
+                                                 <label class="checkbox-inline">
+                                                    @foreach($marcadosAmbi as $marcadoAmbi)
+                                                    <?php $chozniAmb = 0;?>
+                                                        @if($marcadoAmbi == $ambiente->id_ambientes)
+                                                             <input type="checkbox" name="ambients[]" value="{{$ambiente->id_ambientes}}" checked>
+                                                             <?php $chozniAmb = 1;?>
+                                                             @break
+                                                        @endif
+                                                    @endforeach
+                                                    @if($chozniAmb != 1) 
+                                                    <input type="checkbox" name="ambients[]" value="{{$ambiente->id_ambientes}}">
+                                                    @endif
+                                                </label>&nbsp;{{$ambiente->nombre}}&nbsp;({{$ambiente->precio}}Bs.)
+                                              </div>
+                                        @endforeach
 
                                         @foreach($serviciosespecificos as $seresp)
                                     <div class="form-group col-md-12">

@@ -59,16 +59,6 @@
                                 </div>
                                 <br>
 
-                                <div class="row">
-                                  <div class="form-group col-md-6">
-                                    <label for="Ambientes">Ambientes:</label>
-                                    <select name="id_ambientes" id="id_ambientes" class="form-control">
-                                            @foreach($ambientes as $ambiente)
-                                            <option value ="{{$ambiente->id_ambientes}}">{{ $ambiente->nombre }}&nbsp;({{ $ambiente->precio }}Bs.)</option>
-                                            @endforeach
-                                         </select>
-                                  </div>
-                                </div>
                                 <?php date_default_timezone_set('America/La_Paz');?>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
@@ -90,6 +80,16 @@
                                     <label for="Nombre">Servicios Adicionales:</label>
                                   </div>
                                   
+                                  <div class="form-group col-md-12">
+                                    <h6>Ambientes</h6>
+                                    <hr>
+                                  </div>
+                                            @foreach($ambientes as $ambiente)
+                                              <div class="form-group col-md-3">
+                                                <label class="checkbox-inline"><input type="checkbox" name="ambients[]" value="{{$ambiente->id_ambientes}}"></label>&nbsp;{{$ambiente->nombre}}&nbsp;({{$ambiente->precio}}Bs.)
+                                              </div>
+                                            @endforeach
+
                                   @foreach($serviciosespecificos as $seresp)
                                     <div class="form-group col-md-12">
                                       <h6>{{$seresp->nombre}}</h6>

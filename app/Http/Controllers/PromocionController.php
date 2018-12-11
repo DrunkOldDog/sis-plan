@@ -77,7 +77,6 @@ class PromocionController extends Controller
             $file->move(public_path().'/images/', $name);
          }
         $evento= new \App\Evento;
-        $evento->id_ambientes = $request->input('id_ambientes');
         $evento->nombre=$request->get('nombre');
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
@@ -89,6 +88,20 @@ class PromocionController extends Controller
             return back()->withInput()->withErrors("La fecha de inicio debe ser menor a fecha fin");
         }
         $evento->save();
+
+        //recolectar info de los checkbox y almacenar en la tabla eventos_ambiente
+        if($request->input('ambients')){
+            $myCheckboxesAmbi = $request->input('ambients');
+            foreach($myCheckboxesAmbi as $valueAmbi){
+                DB::table('eventos_ambiente')->insert(
+                    array(
+                        'id_ambientes' => $valueAmbi,
+                        'id_eventos' => $evento->id_eventos
+                    )
+                );
+            }
+        }
+
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
         if($request->input('servicios')){
             $myCheckboxes = $request->input('servicios');
@@ -165,10 +178,13 @@ class PromocionController extends Controller
         }
 
         //proceso para sacar un total final
-        $ambientes = DB::table('ambientes')
-            ->select('*')
-            ->orderBy('id_ambientes')
-            ->get(); 
+        $ambientes = DB::table('eventos_ambiente')
+                ->select('ambientes.precio')
+                ->join('ambientes', 'ambientes.id_ambientes', '=', 'eventos_ambiente.id_ambientes')
+                ->join('eventos', 'eventos.id_eventos', '=', 'eventos_ambiente.id_eventos')
+                ->where('eventos.id_eventos', $evento->id_eventos)
+                ->orderBy('id_eventos_ambiente')
+                ->get();
         $precios = DB::table('servicios_evento')
             ->select('servicios.precio')
             ->join('servicios', 'servicios.id_servicios', '=', 'servicios_evento.id_servicios')
@@ -177,15 +193,14 @@ class PromocionController extends Controller
             ->orderBy('id_servicios_evento')
             ->get();
         $replik = 0;
-        foreach ($ambientes as $ambiente) {
-            if($ambiente->id_ambientes == $evento->id_ambientes){
-                $replik = $ambiente->precio;
-            }
-        }
+        foreach($ambientes as $ambiente){
+            $replik+= $ambiente->precio;
+        }    
         $sum = 0;
         foreach($precios as $precio){
         $sum+= $precio->precio;
-        }    
+        }  
+
         $price = \App\Evento::find($evento->id_eventos);
         $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio - ($total+$totalHab+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
@@ -249,7 +264,20 @@ class PromocionController extends Controller
                 array_push($marcados, $precio->id_servicios);
                 }
 
-       return view('promocion.edit',compact('evento','id','servicios','marcados','ambientes','serviciosespecificos', 'habitaciones'));
+        //obtener los checkboxes marcados
+        $preciosAmbi = DB::table('eventos_ambiente')
+                        ->select('ambientes.id_ambientes')
+                        ->join('ambientes', 'ambientes.id_ambientes', '=', 'eventos_ambiente.id_ambientes')
+                        ->join('eventos', 'eventos.id_eventos', '=', 'eventos_ambiente.id_eventos')
+                        ->where('eventos.id_eventos', $id)
+                        ->orderBy('id_eventos_ambiente')
+                        ->get();
+                        $marcadosAmbi = array();
+                        foreach($preciosAmbi as $precioAmbi){
+                        array_push($marcadosAmbi, $precioAmbi->id_ambientes);
+                        }
+
+       return view('promocion.edit',compact('evento','id','servicios','marcados','marcadosAmbi','ambientes','serviciosespecificos', 'habitaciones'));
     }
 
     /**
@@ -271,7 +299,6 @@ class PromocionController extends Controller
         ]);
 
         $evento= \App\Evento::find($id);
-        $evento->id_ambientes = $request->input('id_ambientes');
         $evento->nombre=$request->get('nombre');
         $evento->precio=$request->get('precio');
         $evento->descripcion=$request->get('descripcion');
@@ -290,6 +317,28 @@ class PromocionController extends Controller
         }
         $evento->save();
         
+        //recolectar info de los checkbox y almacenar en la tabla eventos_ambiente
+        if($request->input('ambients')){
+            $myCheckboxesAmbi = $request->input('ambients');
+    
+            DB::table('eventos_ambiente')
+                    ->where('id_eventos', $id)
+                    ->delete();
+    
+            foreach($myCheckboxesAmbi as $valueAmbi){
+                DB::table('eventos_ambiente')->insert(
+                    array(
+                        'id_ambientes' => $valueAmbi,
+                        'id_eventos' => $evento->id_eventos
+                    )
+                );
+            }
+        }else{
+            DB::table('eventos_ambiente')
+                    ->where('id_eventos', $id)
+                    ->delete();
+        }
+
         //recolectar info de los checkbox y almacenar en la tabla servicios_evento
         if($request->input('servi')){
         $myCheckboxes = $request->input('servi');
@@ -306,7 +355,11 @@ class PromocionController extends Controller
                 )
             );
         }
-    }
+        }else{
+            DB::table('servicios_evento')
+                ->where('id_eventos', $id)
+                ->delete();
+        }
 
         //recolectar info de los text inputs y almacenar en la tabla servicios_especifico
         $myInputs = $request->input('espe');
@@ -365,10 +418,13 @@ class PromocionController extends Controller
          }
 
         //proceso para sacar un total final
-        $ambientes = DB::table('ambientes')
-            ->select('*')
-            ->orderBy('id_ambientes')
-            ->get(); 
+        $ambientes = DB::table('eventos_ambiente')
+                ->select('ambientes.precio')
+                ->join('ambientes', 'ambientes.id_ambientes', '=', 'eventos_ambiente.id_ambientes')
+                ->join('eventos', 'eventos.id_eventos', '=', 'eventos_ambiente.id_eventos')
+                ->where('eventos.id_eventos', $evento->id_eventos)
+                ->orderBy('id_eventos_ambiente')
+                ->get();
         $precios = DB::table('servicios_evento')
             ->select('servicios.precio')
             ->join('servicios', 'servicios.id_servicios', '=', 'servicios_evento.id_servicios')
@@ -377,15 +433,14 @@ class PromocionController extends Controller
             ->orderBy('id_servicios_evento')
             ->get();
         $replik = 0;
-        foreach ($ambientes as $ambiente) {
-            if($ambiente->id_ambientes == $evento->id_ambientes){
-                $replik = $ambiente->precio;
-            }
-        }
+        foreach($ambientes as $ambiente){
+            $replik+= $ambiente->precio;
+        }    
         $sum = 0;
         foreach($precios as $precio){
         $sum+= $precio->precio;
-        }    
+        } 
+
         $price = \App\Evento::find($evento->id_eventos);
         $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio - ($total+$totalHab+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
