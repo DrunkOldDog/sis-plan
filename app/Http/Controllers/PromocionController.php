@@ -204,7 +204,7 @@ class PromocionController extends Controller
         $price->precio_total = $total+$totalHab+$sum+$replik+$evento->precio - ($total+$totalHab+$sum+$replik+$evento->precio)*$evento->descuento;
         $price->save();
         
-        //return redirect('promociones')->with('success', 'La informacion se agrego correctamente.');
+        return redirect('promociones')->with('success', 'La informacion se agrego correctamente.');
     }
 
     /**
