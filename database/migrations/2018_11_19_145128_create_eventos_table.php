@@ -15,8 +15,6 @@ class CreateEventosTable extends Migration
     {
         Schema::create('eventos', function (Blueprint $table) {
             $table->increments('id_eventos');
-            $table->unsignedInteger('id_ambientes');
-            $table->foreign('id_ambientes')->references('id_ambientes')->on('ambientes')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nombre', 45);
             $table->float('precio');
             $table->float('precio_total')->nullable();
