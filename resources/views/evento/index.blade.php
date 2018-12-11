@@ -48,12 +48,14 @@
                                 @if(auth()->user()->isAdmin != 0)
                                 <td><p>{{$evento['descripcion']}}</p></td>
                                 <td><a href="{{action('EventoController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Edit</a></td>
+                                @else 
+                                <td><a href="{{action('EventoController@show', $evento['id_eventos'])}}" class="btn btn-primary">Ver</a></td>
                                 @endif
                                 <td>
                                     <form action="{{action('EventoController@destroy', $evento['id_eventos'])}}" method="post">
                                         @csrf
                                         <input name="_method" type="hidden" value="DELETE">
-                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar el paquete?')">Delete</button>
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar el paquete?')">Borrar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -61,7 +63,7 @@
                             </tbody>
                         </table>
                         @if(auth()->user()->isAdmin != 0)
-                        <a href="{{action('EventoController@create')}}" class="btn btn-primary">Registro</a>
+                            <a href="{{action('EventoController@create')}}" class="btn btn-primary">Registro</a>
                         @endif
                     </div>
                 </div>

@@ -44,7 +44,9 @@
                                 <td><option>{{$reserva['hor_ini_evento']}}</option>
                                     <option>{{$reserva['hor_fin_evento']}}</option></td>
                                 <td>@foreach($eventos as $evento)
-                                    @if($reserva['id_eventos'] == $evento->id_eventos){{$evento->nombre}}@endif
+                                    @if($reserva['id_eventos'] == $evento->id_eventos)
+                                        <a href="{{action('EventoController@show', $evento->id_eventos)}}">{{$evento->nombre}}</a>
+                                    @endif
                                 @endforeach</td>
                                 <td>@foreach($clientes as $cliente)
                                         @if($reserva['id_clientes'] == $cliente->id_clientes){{$cliente->apellido}}&nbsp;{{$cliente->nombre}}@endif

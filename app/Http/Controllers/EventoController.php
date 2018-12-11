@@ -259,6 +259,56 @@ class EventoController extends Controller
     public function show($id)
     {
         //
+        $servicios = DB::table('servicios')
+                 ->select('*')
+                 ->orderBy('id_servicios')
+                 ->get();
+        
+        $ambientes = DB::table('ambientes')
+                 ->select('*')
+                 ->orderBy('id_ambientes')
+                 ->get();
+        //obtener todos las habitaciones disponibles
+        $habitaciones = DB::table('habitaciones')
+                ->select('*')
+                ->orderBy('id_habitaciones')
+                ->get();
+        //obtener los servicios con servicios especificos
+        $serviciosespecificos = DB::table('servicios')
+                                ->select('servicios.id_servicios','servicios.nombre')
+                                ->join('productos_servicio', 'servicios.id_servicios', '=', 'productos_servicio.id_servicios')
+                                ->groupBy('servicios.id_servicios','servicios.nombre')
+                                ->get();
+
+        $evento = \App\Evento::find($id);
+
+        //obtener los checkboxes marcados
+        $precios = DB::table('servicios_evento')
+                        ->select('servicios.id_servicios')
+                        ->join('servicios', 'servicios.id_servicios', '=', 'servicios_evento.id_servicios')
+                        ->join('eventos', 'eventos.id_eventos', '=', 'servicios_evento.id_eventos')
+                        ->where('eventos.id_eventos', $id)
+                        ->orderBy('id_servicios_evento')
+                        ->get();
+                        $marcados = array();
+                        foreach($precios as $precio){
+                        array_push($marcados, $precio->id_servicios);
+                        }
+
+        //obtener los checkboxes marcados
+        $preciosAmbi = DB::table('eventos_ambiente')
+                        ->select('ambientes.id_ambientes')
+                        ->join('ambientes', 'ambientes.id_ambientes', '=', 'eventos_ambiente.id_ambientes')
+                        ->join('eventos', 'eventos.id_eventos', '=', 'eventos_ambiente.id_eventos')
+                        ->where('eventos.id_eventos', $id)
+                        ->orderBy('id_eventos_ambiente')
+                        ->get();
+                        $marcadosAmbi = array();
+                        foreach($preciosAmbi as $precioAmbi){
+                        array_push($marcadosAmbi, $precioAmbi->id_ambientes);
+                        }
+
+        return view('evento.show',compact('evento','id','servicios','marcados','marcadosAmbi', 'ambientes','serviciosespecificos','habitaciones'));
     }
 
     /**
