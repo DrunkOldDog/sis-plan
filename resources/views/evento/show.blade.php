@@ -48,7 +48,7 @@
                                           <div class="row">
                                             <div class="form-group col-md-12">
                                               <label for="Descripcion">Descripcion:</label>
-                                              <textarea class="form-control" rows="3" name="descripcion">{{$evento->descripcion}}</textarea>
+                                              <textarea class="form-control" rows="3" name="descripcion" readonly>{{$evento->descripcion}}</textarea>
                                             </div>
                                           </div>
         
@@ -56,7 +56,6 @@
                                           <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <img class="imagensilla" width="500" height="400" src="../../../images/{{$evento->foto}}">
-                                                    <input type="file" accept="image/*" name="imagen">
                                                 </div>
                                             </div>
                                         @endif

@@ -51,12 +51,12 @@
                                 <td>@foreach($clientes as $cliente)
                                         @if($reserva['id_clientes'] == $cliente->id_clientes){{$cliente->apellido}}&nbsp;{{$cliente->nombre}}@endif
                                     @endforeach</td>
-                                <td><a href="{{action('ReservaController@edit', $reserva['id_reservas'])}}" class="btn btn-warning">Edit</a></td>
+                                <td><a href="{{action('ReservaController@edit', $reserva['id_reservas'])}}" class="btn btn-warning">Editar</a></td>
                                 <td>
                                     <form action="{{action('ReservaController@destroy', $reserva['id_reservas'])}}" method="post">
                                         @csrf
                                         <input name="_method" type="hidden" value="DELETE">
-                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar la reserva?')">Delete</button>
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar la reserva?')">Borrar</button>
                                     </form>
                                 </td>
                             </tr>

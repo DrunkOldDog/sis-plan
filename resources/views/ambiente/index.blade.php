@@ -41,12 +41,12 @@
                                 <td>{{$ambiente['capacidad']}}&nbsp;Personas</td>
                                 <td>{{$ambiente['precio']}}Bs.</td>
 
-                                <td><a href="{{action('AmbienteController@edit', $ambiente['id_ambientes'])}}" class="btn btn-warning">Edit</a></td>
+                                <td><a href="{{action('AmbienteController@edit', $ambiente['id_ambientes'])}}" class="btn btn-warning">Editar</a></td>
                                 <td>
                                     <form action="{{action('AmbienteController@destroy', $ambiente['id_ambientes'])}}" method="post">
                                         @csrf
                                         <input name="_method" type="hidden" value="DELETE">
-                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar el paquete?')">Delete</button>
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar el ambiente?')">Borrar</button>
                                     </form>
                                 </td>
                             </tr>

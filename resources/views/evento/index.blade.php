@@ -47,7 +47,7 @@
                                 <td>{{$evento['precio_total']}}Bs.</td>
                                 @if(auth()->user()->isAdmin != 0)
                                 <td><p>{{$evento['descripcion']}}</p></td>
-                                <td><a href="{{action('EventoController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Edit</a></td>
+                                <td><a href="{{action('EventoController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Editar</a></td>
                                 @else 
                                 <td><a href="{{action('EventoController@show', $evento['id_eventos'])}}" class="btn btn-primary">Ver</a></td>
                                 @endif

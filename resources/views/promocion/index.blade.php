@@ -45,12 +45,12 @@
                                 <td>{{$evento['fecha_inicio']}}</td>
                                 <td>{{$evento['fecha_fin']}}</td>
 
-                                <td><a href="{{action('PromocionController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Edit</a></td>
+                                <td><a href="{{action('PromocionController@edit', $evento['id_eventos'])}}" class="btn btn-warning">Editar</a></td>
                                 <td>
                                     <form action="{{action('PromocionController@destroy', $evento['id_eventos'])}}" method="post">
                                         @csrf
                                         <input name="_method" type="hidden" value="DELETE">
-                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar el paquete?')">Delete</button>
+                                        <button class="btn btn-danger" type="submit" onclick="return confirm('¿Quiere borrar la promocion?')">Borrar</button>
                                     </form>
                                 </td>
                             </tr>
