@@ -73,6 +73,16 @@ class ReservaController extends Controller
             'ci' => 'required|alpha_num|max:10',
         ]);
 
+        if(auth()->user()->isAdmin != 0){
+            DB::table('clientes')->insert(
+                array(
+                    'nombre' => $request->get('nombre'),
+                    'apellido' => $request->get('apellido'),
+                    'ci' => $request->get('ci'),
+                )
+            );
+        }
+
         $cliente = DB::table('clientes')
                     ->select('*')
                     ->where('nombre', $request->get('nombre'))
@@ -95,6 +105,16 @@ class ReservaController extends Controller
         $hora_ci = Carbon\Carbon::parse($reserva->hor_fin_evento);
 
         //validaciones
+        //ver si reserva esta en rango de promociones
+        $promocion = DB::table('eventos')
+                    ->select('*')
+                    ->where('id_eventos', $reserva->id_eventos)
+                    ->get();
+        if($promocion[0]->fecha_inicio){
+            if($reserva->fec_evento < $promocion[0]->fecha_inicio || $reserva->fec_evento > $promocion[0]->fecha_fin){
+                return back()->withInput()->withErrors("La fecha del evento debe estar dentro de los limites de la promocion");
+            }
+        }
         //hora inicio menor a hora fin
         if($reserva->hor_ini_evento >= $reserva->hor_fin_evento){
             if($hora_ci->hour > 4){
@@ -110,6 +130,37 @@ class ReservaController extends Controller
             return back()->withInput()->withErrors("Los eventos unicamente funcionan en horas exactas. (Ejemplo 10:00-12:00)");
         }
 
+        //ver si hay reservas en esos ambientes
+        $reserChocadas = DB::table('reservas')
+                    ->select('*')
+                    ->where('fec_evento', $reserva->fec_evento)
+                    ->get();
+        $ambiReser = DB::table('eventos_ambiente')
+                    ->select('*')
+                    ->where('id_eventos', $reserva->id_eventos)
+                    ->get();
+
+        foreach($reserChocadas as $reser){
+            $ambientes = DB::table('eventos_ambiente')
+                        ->select('*')
+                        ->where('id_eventos',$reser->id_eventos)
+                        ->get();
+            foreach($ambientes as $ambi){
+               foreach($ambiReser as $ambir){
+                   if($ambi->id_ambientes == $ambir->id_ambientes){
+                       //echo $reser->hor_ini_evento. " comparado a ". $reserva->hor_ini_evento . "con hora fin ". $reser->hor_fin_evento . "<br>";
+                       if(strtotime($reserva->hor_ini_evento) >= $reser->hor_ini_evento && strtotime($reserva->hor_ini_evento) < $reser->hor_fin_evento){
+                            return back()->withInput()->withErrors("Ya existe una reserva con algun ambiente del sistema la fecha: " . $reserva->fec_evento . " de: ". $reser->hor_ini_evento . "-". $reser->hor_fin_evento);
+                       }else{
+                           if(strtotime($reserva->hor_ini_evento) >= $reser->hor_ini_evento && $hora_ci->hour < 5){
+                                return back()->withInput()->withErrors("Ya existe una reserva con algun ambiente del sistema la fecha: " . $reserva->fec_evento . " de: ". $reser->hor_ini_evento . "-". $reser->hor_fin_evento);
+                           }
+                       }
+                   }
+               }
+            }
+        }
+        //echo $ambiReser;
         $reserva->save();  
         return redirect('reservas')->with('success', 'Se almaceno la informacion correctamente.');
     }
@@ -168,7 +219,66 @@ class ReservaController extends Controller
         $reserva->fec_evento=$request->get('fec_evento');
         $reserva->hor_ini_evento=$request->get('hor_ini_evento');
         $reserva->hor_fin_evento=$request->get('hor_fin_evento');
-        $reserva->save();
+        
+        //parsear el string de horas a tiempo
+        $hora_ap = Carbon\Carbon::parse($reserva->hor_ini_evento);
+        $hora_ci = Carbon\Carbon::parse($reserva->hor_fin_evento);
+
+        //validaciones
+        //ver si reserva esta en rango de promociones
+        $promocion = DB::table('eventos')
+                    ->select('*')
+                    ->where('id_eventos', $reserva->id_eventos)
+                    ->get();
+        if($promocion[0]->fecha_inicio){
+            if($reserva->fec_evento < $promocion[0]->fecha_inicio || $reserva->fec_evento > $promocion[0]->fecha_fin){
+                return back()->withInput()->withErrors("La fecha del evento debe estar dentro de los limites de la promocion");
+            }
+        }
+        //hora inicio menor a hora fin
+        if($reserva->hor_ini_evento >= $reserva->hor_fin_evento){
+            if($hora_ci->hour > 4){
+                return back()->withInput()->withErrors("La hora de inicio: " .$reserva->hor_ini_evento. " debe ser menor a la hora fin: " .$reserva->hor_fin_evento. " y la hora fin debe ser menor a las 5am.");
+            }
+        }
+        //hora apertura mayor a 10am
+        if($hora_ap->hour < 10){
+            return back()->withInput()->withErrors("Los eventos en el hotel empiezan a las 10am.");
+        }
+        //la reserva debe ser en una hora exacta
+        if($hora_ap->minute != 0 || $hora_ci->minute != 0){
+            return back()->withInput()->withErrors("Los eventos unicamente funcionan en horas exactas. (Ejemplo 10:00-12:00)");
+        }
+
+        //ver si hay reservas en esos ambientes
+        $reserChocadas = DB::table('reservas')
+                    ->select('*')
+                    ->where('fec_evento', $reserva->fec_evento)
+                    ->get();
+
+        $ambiReser = DB::table('eventos_ambiente')
+                    ->select('*')
+                    ->where('id_eventos', $reserva->id_eventos)
+                    ->get();
+
+        foreach($reserChocadas as $reser){
+            $ambientes = DB::table('eventos_ambiente')
+                        ->select('*')
+                        ->where('id_eventos',$reser->id_eventos)
+                        ->get();
+            foreach($ambientes as $ambi){
+               foreach($ambiReser as $ambir){
+                   if($ambi->id_ambientes == $ambir->id_ambientes){
+                       //echo $reser->hor_ini_evento. " comparado a ". $reserva->hor_ini_evento . "con hora fin ". $reser->hor_fin_evento . "<br>";
+                       if($reserva->hor_ini_evento >= $reser->hor_ini_evento && $reserva->hor_ini_evento < $reser->hor_fin_evento){
+                            return back()->withInput()->withErrors("Ya existe una reserva con algun ambiente del sistema la fecha: " . $reserva->fec_evento . " de: ". $reser->hor_ini_evento . "-". $reser->hor_fin_evento);
+                       }
+                   }
+               }
+            }
+        }
+        //echo $ambiReser;
+        $reserva->save();  
         return redirect('reservas')->with('success', 'Se edito la informacion correctamente.');
     }
 

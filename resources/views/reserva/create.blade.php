@@ -120,7 +120,7 @@
                                                     <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
                                                     @endif
                                                 @else
-                                                    @if(!$evento->estado)
+                                                    @if(!$evento->estado && !$evento->fecha_inicio)
                                                     <option value ="{{$evento->id_eventos}}">{{ $evento->nombre }}&nbsp;({{ $evento->precio_total }}Bs.)</option>
                                                     @endif
                                                 @endif     

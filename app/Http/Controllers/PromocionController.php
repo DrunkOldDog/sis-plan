@@ -67,7 +67,8 @@ class PromocionController extends Controller
             'precio' => 'required|numeric|min:0',
             'descripcion' => 'required',
             'imagen' => 'required|image|max:5000',
-            'descuento' => 'required|numeric|between:0, 1' 
+            'descuento' => 'required|numeric|between:0, 1',
+            'ambients' => 'required'
         ]);
         if($request->hasfile('imagen'))
          {
@@ -294,7 +295,8 @@ class PromocionController extends Controller
             'precio' => 'required|numeric|min:0',
             'descripcion' => 'required',
             'imagen' => 'nullable|image|max:5000',
-            'descuento' => 'required|numeric|between:0, 1' 
+            'descuento' => 'required|numeric|between:0, 1',
+            'ambients' => 'required'
         ]);
 
         $evento= \App\Evento::find($id);

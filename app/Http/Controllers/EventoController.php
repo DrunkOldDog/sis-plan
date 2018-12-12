@@ -87,7 +87,8 @@ class EventoController extends Controller
             ]);
         }else{
             $request->validate([
-                'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20'
+                'nombre' => 'required|regex:/^[\pL\s\-]+$/u|max:20',
+                'ambients' => 'required'
             ]);
         }
 
@@ -200,8 +201,29 @@ class EventoController extends Controller
         $mytime = Carbon\Carbon::now();
         date_default_timezone_set('America/La_Paz');
 
+
         //en caso de ser usuario, agregar evento a eventos_cliente y crear reserva
         if(auth()->user()->isAdmin == 0){
+            //parsear el string de horas a tiempo
+        $hora_ap = Carbon\Carbon::parse($request->input('hor_ini_evento'));
+        $hora_ci = Carbon\Carbon::parse($request->input('hor_fin_evento'));
+
+        //validaciones
+        //hora inicio menor a hora fin
+        if($request->input('hor_ini_evento') >= $request->input('hor_fin_evento')){
+            if($hora_ci->hour > 4){
+                return back()->withInput()->withErrors("La hora de inicio: " .$request->input('hor_ini_evento'). " debe ser menor a la hora fin: " .$request->input('hor_fin_evento'). " y la hora fin debe ser menor a las 5am.");
+            }
+        }
+        //hora apertura mayor a 10am
+        if($hora_ap->hour < 10){
+            return back()->withInput()->withErrors("Los eventos en el hotel empiezan a las 10am.");
+        }
+        //la reserva debe ser en una hora exacta
+        if($hora_ap->minute != 0 || $hora_ci->minute != 0){
+            return back()->withInput()->withErrors("Los eventos unicamente funcionan en horas exactas. (Ejemplo 10:00-12:00)");
+        }
+
             DB::table('eventos_cliente')->insert(
                 array(
                     'id_eventos' => $evento->id_eventos,
