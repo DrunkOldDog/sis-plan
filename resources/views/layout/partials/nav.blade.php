@@ -20,7 +20,7 @@
                 <a class="nav-link" href="{{ url('ambientes') }}">Ambientes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Precios</a>
+                <a class="nav-link" href="{{ url('precios') }}">Precios</a>
               </li>
               @endif
               @if(auth()->user()->isAdmin == 0)

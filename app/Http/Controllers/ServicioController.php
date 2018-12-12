@@ -3,18 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Interfaces\PrecioRepositoryInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
 
-class PrecioController extends Controller
+class ServicioController extends Controller
 {
-    public function __construct(PrecioRepositoryInterface $precio)
-	{
-		$this->precio = $precio;
-    }
-    
-    
     /**
      * Display a listing of the resource.
      *
@@ -22,32 +13,8 @@ class PrecioController extends Controller
      */
     public function index()
     {
-        //API GET 
-        //Ejemplo de hacer un get en una api online
-        /*$client = new \GuzzleHttp\Client();
-        try {
-            $res = $client->get('https://jsonplaceholder.typicode.com/todos/10',array(
-          'timeout' => 2, // timeout respuesta
-          'connect_timeout' => 2, // timeout conexion
-          ));
-            echo "Codigo de Estado HTTP: ". $res->getStatusCode() . "<br>"; // 200
-            echo "Mensaje del API :" .$res->getBody();
-        }
-        catch (\Exception $e) {
-            echo "no existe";
-        }*/
-
-        //obtener apis con httpful
-        //$uri = 'http://192.168.0.102:8000/api/ambientes/1';
-        //$response = \Httpful\Request::get($uri)->timeoutIn(3)->authenticateWith('admin', 'admin')->send();
-        //echo $response;
-
-        //$servicios = $this->precio->SelectAllServicios();
-        $productos = $this->precio->SelectAllProductos();
-        $habitaciones = $this->precio->SelectAllHabitaciones();
-        $ambientes = $this->precio->SelectAllAmbientes();
-
-        return view('precio.index',compact('servicios','productos','habitaciones','ambientes'));
+        //
+        return \App\Servicio::orderBy('id_servicios')->get();
     }
 
     /**
@@ -58,7 +25,6 @@ class PrecioController extends Controller
     public function create()
     {
         //
-        return view('ambiente.create');
     }
 
     /**
@@ -70,6 +36,7 @@ class PrecioController extends Controller
     public function store(Request $request)
     {
         //
+
     }
 
     /**
@@ -104,6 +71,9 @@ class PrecioController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $servicio= \App\Servicio::find($id);
+        $servicio->precio=$request->precio;
+        $servicio->save();
     }
 
     /**
