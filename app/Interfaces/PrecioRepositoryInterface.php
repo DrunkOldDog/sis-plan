@@ -11,6 +11,11 @@ interface PrecioRepositoryInterface {
 
     public function selectAllProductos();
 
-	public function find($id);
-	
+    public function updateHabitaciones($id, $precios);
+    
+    public function updateAmbientes($id, $precios);
+
+    public function updateServicios($id, $precios);
+
+    public function updateProductos($id, $precios);
 }

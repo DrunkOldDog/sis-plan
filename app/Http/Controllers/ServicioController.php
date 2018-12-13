@@ -14,7 +14,7 @@ class ServicioController extends Controller
     public function index()
     {
         //
-        return \App\Servicio::orderBy('id_servicios')->get();
+        return \App\Servicio::where('precio','!=',0)->orderBy('id_servicios')->get();
     }
 
     /**

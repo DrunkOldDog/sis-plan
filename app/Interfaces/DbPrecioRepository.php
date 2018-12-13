@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Route;
 
 class DbPrecioRepository implements PrecioRepositoryInterface {
 	
@@ -35,20 +36,12 @@ class DbPrecioRepository implements PrecioRepositoryInterface {
     
     public function selectAllServicios()
 	{
-    //verificar si existe la api de servicios para poder extraer datos, si no, usar los datos locales.
-    $request = Request::create('/api/servicios');
-        $servicios = app()->handle($request);
-        if($servicios->status() == 200){
-            $request = Request::create('/api/servicios', 'GET');
-            $servicios = app()->handle($request);
-            $servicios = $servicios->content();
-        }else{
-          $servicios = DB::table('servicios')
-            ->select('*')
-            ->orderBy('id_servicios')
-            ->get();
+        $request = Request::create('/api/servicios' , 'GET');
+        if(Route::dispatch($request)->status() == 200){
+            $servicios = Route::dispatch($request);
+            $servicios = $servicios->getContent();
+            $servicios = json_decode($servicios);
         }
-
 		return $servicios;
     }
     
@@ -72,8 +65,31 @@ class DbPrecioRepository implements PrecioRepositoryInterface {
 		return $productos;
 	}
 	
-	public function find($id)
+	public function updateHabitaciones($id, $precio)
 	{
-		return Ambiente::find($id);
+        DB::table('habitaciones')
+            ->where('id_habitaciones', $id)
+            ->update(['precio' => $precio]);
+    }
+    
+    public function updateAmbientes($id, $precio)
+	{
+        $ambiente= \App\Ambiente::find($id);
+        $ambiente->precio = $precio;
+        $ambiente->save();
+    }
+    
+    public function updateServicios($id, $precio)
+	{
+		DB::table('servicios')
+            ->where('id_servicios', $id)
+            ->update(['precio' => $precio]);
+    }
+    
+    public function updateProductos($id, $precio)
+	{
+		DB::table('productos')
+            ->where('id_productos', $id)
+            ->update(['precio' => $precio]);
 	}
 }

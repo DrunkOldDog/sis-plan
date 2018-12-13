@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Interfaces\PrecioRepositoryInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Route;
+
 
 class PrecioController extends Controller
 {
@@ -26,7 +28,7 @@ class PrecioController extends Controller
         //Ejemplo de hacer un get en una api online
         /*$client = new \GuzzleHttp\Client();
         try {
-            $res = $client->get('https://jsonplaceholder.typicode.com/todos/10',array(
+            $res = $client->get('https://jsonplaceholder.typicode.com/todos/1',array(
           'timeout' => 2, // timeout respuesta
           'connect_timeout' => 2, // timeout conexion
           ));
@@ -37,12 +39,7 @@ class PrecioController extends Controller
             echo "no existe";
         }*/
 
-        //obtener apis con httpful
-        //$uri = 'http://192.168.0.102:8000/api/ambientes/1';
-        //$response = \Httpful\Request::get($uri)->timeoutIn(3)->authenticateWith('admin', 'admin')->send();
-        //echo $response;
-
-        //$servicios = $this->precio->SelectAllServicios();
+        $servicios = $this->precio->SelectAllServicios();
         $productos = $this->precio->SelectAllProductos();
         $habitaciones = $this->precio->SelectAllHabitaciones();
         $ambientes = $this->precio->SelectAllAmbientes();
@@ -58,7 +55,6 @@ class PrecioController extends Controller
     public function create()
     {
         //
-        return view('ambiente.create');
     }
 
     /**
@@ -69,7 +65,35 @@ class PrecioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //insertar datos a habitacion
+        $myInputsHab = $request->input('habi');
+        $myInputsHabId = $request->input('habiId');
+        for($i = 0; $i < count($myInputsHabId); $i++){
+            $this->precio->updateHabitaciones($myInputsHabId[$i], $myInputsHab[$i]);
+        }
+
+        //insertar datos a ambientes
+        $myInputsAmb = $request->input('ambi');
+        $myInputsAmbId = $request->input('ambiId');
+        for($i = 0; $i < count($myInputsAmbId); $i++){
+            $this->precio->updateAmbientes($myInputsAmbId[$i], $myInputsAmb[$i]);
+        }
+
+        //insertar datos a servicios
+        $myInputsSer = $request->input('serv');
+        $myInputsSerId = $request->input('servId');
+        for($i = 0; $i < count($myInputsSerId); $i++){
+            $this->precio->updateServicios($myInputsSerId[$i], $myInputsSer[$i]);
+        }
+
+        //insertar datos a productos
+        $myInputsProd = $request->input('prod');
+        $myInputsProdId = $request->input('prodId');
+        for($i = 0; $i < count($myInputsProdId); $i++){
+            $this->precio->updateProductos($myInputsProdId[$i], $myInputsProd[$i]);
+        }
+
+        return redirect('precios')->with('success', 'La informacion se edito correctamente.');;
     }
 
     /**
