@@ -51,7 +51,9 @@
                                 <td>@foreach($clientes as $cliente)
                                         @if($reserva['id_clientes'] == $cliente->id_clientes){{$cliente->apellido}}&nbsp;{{$cliente->nombre}}@endif
                                     @endforeach</td>
+                                @if(auth()->user()->isAdmin != 0)
                                 <td><a href="{{action('ReservaController@edit', $reserva['id_reservas'])}}" class="btn btn-warning">Editar</a></td>
+                                @endif
                                 <td>
                                     <form action="{{action('ReservaController@destroy', $reserva['id_reservas'])}}" method="post">
                                         @csrf

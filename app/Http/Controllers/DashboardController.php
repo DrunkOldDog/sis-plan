@@ -78,9 +78,11 @@ class DashboardController extends Controller
         $arrayLabels = array_values(array_unique($arrayLabels));
 
         for($i=0; $i < count($arrayLabels); $i++){
-            array_push($arrayDataset, $counts[$arrayLabels[$i]]);
             $event = \App\Evento::where('id_eventos', $arrayLabels[$i])->orderBy('id_eventos')->get();
+            if(!isset($event[0]->estado)){
+            array_push($arrayDataset, $counts[$arrayLabels[$i]]);
             array_push($arrayNames, $event[0]->nombre);
+            }
         }
         //dd($arrayDataset);
         $chartReq = new DashboardChart('pie', 'eveReq');
