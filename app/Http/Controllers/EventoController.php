@@ -198,9 +198,8 @@ class EventoController extends Controller
             $auxHab++; 
         }
 
-        $mytime = Carbon\Carbon::now();
         date_default_timezone_set('America/La_Paz');
-
+        $mytime = Carbon\Carbon::now();
 
         //en caso de ser usuario, agregar evento a eventos_cliente y crear reserva
         if(auth()->user()->isAdmin == 0){
@@ -219,9 +218,24 @@ class EventoController extends Controller
         if($hora_ap->hour < 10){
             return back()->withInput()->withErrors("Los eventos en el hotel empiezan a las 10am.");
         }
+        //hora reserva menor a hora actual
+        if($request->input('fec_evento') == $mytime->toDateString() && $hora_ap->hour <= $mytime->hour){
+            return back()->withInput()->withErrors("La hora de inicio no puede ser menor a la hora actual.");
+        }
         //la reserva debe ser en una hora exacta
         if($hora_ap->minute != 0 || $hora_ci->minute != 0){
             return back()->withInput()->withErrors("Los eventos unicamente funcionan en horas exactas. (Ejemplo 10:00-12:00)");
+        }
+
+        $reservasEventos = DB::table('reservas')
+                        ->select('*')
+                        ->orderBy('id_reservas')
+                        ->get();
+        
+        foreach($reservasEventos as $reservilla){
+            if($reservilla->fec_evento == $request->input('fec_evento') && strtotime($reservilla->hor_ini_evento) <= strtotime($request->input('hor_ini_evento')) && strtotime($reservilla->hor_fin_evento) > strtotime($request->input('hor_ini_evento'))){
+                return back()->withInput()->withErrors("Ya existe una reserva programada para ese dia, las reservas personalizadas no pueden chocar con otro evento del hotel");
+            }
         }
 
             DB::table('eventos_cliente')->insert(

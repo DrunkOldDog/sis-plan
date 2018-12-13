@@ -104,11 +104,11 @@
                                     </div>
                                     <div class="form-group col-md-4">
                                       <label for="hor_ini_evento">Hora Inicio Evento:</label>
-                                      <input type="time" class="form-control" name="hor_ini_evento" value="{{old('hor_ini_evento')}}" required>
+                                      <input type="time" class="form-control" name="hor_ini_evento" @if(old('hor_ini_evento')) value="{{old('hor_ini_evento')}}" @else value="{{date("H:00", strtotime(date("H:00")) + 60*60)}}" @endif required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Hora Fin Evento:</label>
-                                        <input type="time" class="form-control" name="hor_fin_evento" value="{{old('hor_fin_evento')}}" required>
+                                        <input type="time" class="form-control" name="hor_fin_evento" @if(old('hor_fin_evento')) value="{{old('hor_fin_evento')}}" @else value="{{date("H:00", strtotime(date("H:00")) + 60*120)}}" @endif required>
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="hor_fin_evento">Evento:</label>

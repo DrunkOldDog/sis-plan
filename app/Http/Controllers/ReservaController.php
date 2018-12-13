@@ -121,6 +121,10 @@ class ReservaController extends Controller
                 return back()->withInput()->withErrors("La hora de inicio: " .$reserva->hor_ini_evento. " debe ser menor a la hora fin: " .$reserva->hor_fin_evento. " y la hora fin debe ser menor a las 5am.");
             }
         }
+        //hora reserva menor a hora actual
+        if($reserva->fec_evento == $mytime->toDateString() && $hora_ap->hour <= $mytime->hour){
+            return back()->withInput()->withErrors("La hora de inicio no puede ser menor a la hora actual.");
+        }
         //hora apertura mayor a 10am
         if($hora_ap->hour < 10){
             return back()->withInput()->withErrors("Los eventos en el hotel empiezan a las 10am.");
@@ -225,6 +229,9 @@ class ReservaController extends Controller
         $hora_ap = Carbon\Carbon::parse($reserva->hor_ini_evento);
         $hora_ci = Carbon\Carbon::parse($reserva->hor_fin_evento);
 
+        date_default_timezone_set('America/La_Paz');
+        $mytime = Carbon\Carbon::now();
+        
         //validaciones
         //ver si reserva esta en rango de promociones
         $promocion = DB::table('eventos')
@@ -241,6 +248,10 @@ class ReservaController extends Controller
             if($hora_ci->hour > 4){
                 return back()->withInput()->withErrors("La hora de inicio: " .$reserva->hor_ini_evento. " debe ser menor a la hora fin: " .$reserva->hor_fin_evento. " y la hora fin debe ser menor a las 5am.");
             }
+        }
+        //hora reserva menor a hora actual
+        if($reserva->fec_evento == $mytime->toDateString() && $hora_ap->hour <= $mytime->hour){
+            return back()->withInput()->withErrors("La hora de inicio no puede ser menor a la hora actual.");
         }
         //hora apertura mayor a 10am
         if($hora_ap->hour < 10){
