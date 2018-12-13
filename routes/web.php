@@ -18,6 +18,7 @@ Route::resource('eventos', 'EventoController')->middleware('auth');
 Route::resource('promociones', 'PromocionController')->middleware('auth');
 Route::resource('reservas', 'ReservaController')->middleware('auth');
 Route::resource('precios', 'PrecioController')->middleware('auth');
+Route::resource('dashboards', 'DashboardController')->middleware('admin');
 Route::resource('ambientes', 'AmbienteController')->middleware('auth');
 Route::resource('roles', 'RolController')->middleware('admin');
 Route::get('/reservas/create/{id}',[

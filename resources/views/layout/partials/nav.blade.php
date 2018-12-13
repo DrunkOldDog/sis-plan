@@ -39,7 +39,7 @@
               @endif
               @if(auth()->user()->isAdmin == 1)
               <li class="nav-item">
-                  <a class="nav-link" href="#">Dashboard</a>
+                  <a class="nav-link" href="{{ url('dashboards') }}">Dashboard</a>
                 </li>
               @endif
           </ul>
