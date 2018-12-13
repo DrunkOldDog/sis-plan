@@ -73,7 +73,8 @@ class ServicioController extends Controller
         //
         $servicio= \App\Servicio::find($id);
         $servicio->precio=$request->precio;
-        $servicio->save();
+        return $request->precio;
+        //$servicio->save();
     }
 
     /**

@@ -28,12 +28,33 @@ class PrecioController extends Controller
         //Ejemplo de hacer un get en una api online
         /*$client = new \GuzzleHttp\Client();
         try {
-            $res = $client->get('https://jsonplaceholder.typicode.com/todos/1',array(
+            $res = $client->get('https://jsonplaceholder.typicode.com/posts/1',array(
           'timeout' => 2, // timeout respuesta
           'connect_timeout' => 2, // timeout conexion
           ));
             echo "Codigo de Estado HTTP: ". $res->getStatusCode() . "<br>"; // 200
             echo "Mensaje del API :" .$res->getBody();
+        }
+        catch (\Exception $e) {
+            echo "no existe";
+        }*/
+
+        //API PUT
+        //Ejemplo de hacer un put en una api online
+        /*$client = new \GuzzleHttp\Client();
+        try{
+        $response = $client->request('PUT', 'https://jsonplaceholder.typicode.com/posts/1', [
+            'form_params' => [
+                'id' => '1',
+                'title' => 'Juani',
+                'body' => 'Hola Software esta es una prueba de PUT',
+                'userId' => '1'
+            ],
+            'timeout'         => 1,
+            'connect_timeout' => 1
+            ]);
+            echo "Codigo de Estado HTTP: ". $response->getStatusCode() . "<br>"; // 200
+            echo "Mensaje del API :" .$response->getBody();
         }
         catch (\Exception $e) {
             echo "no existe";

@@ -67,9 +67,24 @@ class DbPrecioRepository implements PrecioRepositoryInterface {
 	
 	public function updateHabitaciones($id, $precio)
 	{
-        DB::table('habitaciones')
+        $client = new \GuzzleHttp\Client();
+        try{
+        $response = $client->request('PUT', 'http://192.168.10.165:8000/api/habitaciones/'.$id, [
+            'form_params' => [
+                'id' => $id,
+                'precio' => $precio,
+            ],
+            'timeout'         => 1,
+            'connect_timeout' => 1
+            ]);
+            //echo "Codigo de Estado HTTP: ". $response->getStatusCode() . "<br>"; // 200
+            //echo "Mensaje del API :" .$response->getBody();
+        }
+        catch (\Exception $e) {
+            DB::table('habitaciones')
             ->where('id_habitaciones', $id)
             ->update(['precio' => $precio]);
+        }
     }
     
     public function updateAmbientes($id, $precio)
@@ -88,8 +103,23 @@ class DbPrecioRepository implements PrecioRepositoryInterface {
     
     public function updateProductos($id, $precio)
 	{
-		DB::table('productos')
+        $client = new \GuzzleHttp\Client();
+        try{
+        $response = $client->request('PUT', 'http://192.168.10.165:8000/api/productos/'.$id, [
+            'form_params' => [
+                'id' => $id,
+                'precio' => $precio,
+            ],
+            'timeout'         => 1,
+            'connect_timeout' => 1
+            ]);
+            //echo "Codigo de Estado HTTP: ". $response->getStatusCode() . "<br>"; // 200
+            //echo "Mensaje del API :" .$response->getBody();
+        }
+        catch (\Exception $e) {
+            DB::table('productos')
             ->where('id_productos', $id)
             ->update(['precio' => $precio]);
+        }
 	}
 }
