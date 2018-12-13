@@ -135,6 +135,7 @@ class ReservaController extends Controller
                     ->select('*')
                     ->where('fec_evento', $reserva->fec_evento)
                     ->get();
+                    
         $ambiReser = DB::table('eventos_ambiente')
                     ->select('*')
                     ->where('id_eventos', $reserva->id_eventos)
@@ -148,11 +149,11 @@ class ReservaController extends Controller
             foreach($ambientes as $ambi){
                foreach($ambiReser as $ambir){
                    if($ambi->id_ambientes == $ambir->id_ambientes){
-                       //echo $reser->hor_ini_evento. " comparado a ". $reserva->hor_ini_evento . "con hora fin ". $reser->hor_fin_evento . "<br>";
-                       if(strtotime($reserva->hor_ini_evento) >= $reser->hor_ini_evento && strtotime($reserva->hor_ini_evento) < $reser->hor_fin_evento){
+                       echo $reserva->hor_ini_evento. " es mayorigual a ". $reser->hor_ini_evento . " y ". $reserva->hor_ini_evento . " menor a ". $reser->hor_fin_evento. "<br>";
+                       if(strtotime($reserva->hor_ini_evento) >= strtotime($reser->hor_ini_evento) && strtotime($reserva->hor_ini_evento) < strtotime($reser->hor_fin_evento)){
                             return back()->withInput()->withErrors("Ya existe una reserva con algun ambiente del sistema la fecha: " . $reserva->fec_evento . " de: ". $reser->hor_ini_evento . "-". $reser->hor_fin_evento);
                        }else{
-                           if(strtotime($reserva->hor_ini_evento) >= $reser->hor_ini_evento && $hora_ci->hour < 5){
+                           if(strtotime($reserva->hor_ini_evento) >= strtotime($reser->hor_ini_evento) && $hora_ci->hour < 5){
                                 return back()->withInput()->withErrors("Ya existe una reserva con algun ambiente del sistema la fecha: " . $reserva->fec_evento . " de: ". $reser->hor_ini_evento . "-". $reser->hor_fin_evento);
                            }
                        }
@@ -161,8 +162,8 @@ class ReservaController extends Controller
             }
         }
         //echo $ambiReser;
-        $reserva->save();  
-        return redirect('reservas')->with('success', 'Se almaceno la informacion correctamente.');
+        //$reserva->save();  
+        //return redirect('reservas')->with('success', 'Se almaceno la informacion correctamente.');
     }
 
     /**
