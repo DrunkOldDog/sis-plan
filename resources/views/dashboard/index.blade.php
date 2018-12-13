@@ -38,6 +38,12 @@
                                     <div class="form-group col-md-6">
                                          {!! $chartRes->container() !!}
                                     </div>
+                                    <div class="form-group col-md-6">
+                                            {!! $chartEve->container() !!}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                            {!! $chartReq->container() !!}
+                                    </div>
                             </div>
                     </div>
             </div>
@@ -55,4 +61,6 @@
         <script type="text/javascript" src=https://cdnjs.cloudflare.com/ajax/libs/echarts/4.0.2/echarts-en.min.js charset=utf-8></script>
         {!! $chart->script() !!}
         {!! $chartRes->script() !!}
+        {!! $chartEve->script() !!}
+        {!! $chartReq->script() !!}
 @endsection
